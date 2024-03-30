@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import NavBar from "./components/Navbar";
-import Footer from "./components/Footer";
+const SidePanel = dynamic(() => import('./components/SidePanel'), { ssr: false });
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
 export default function RootLayout({children}:RootLayoutProps){
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <NavBar/>
-        {children}
+      <body>
+        <SidePanel/>
+          {children}
       </body>
     </html>
   );
