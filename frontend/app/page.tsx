@@ -37,52 +37,121 @@ export default function Home() {
               <tr>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>No</th>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>Title</th>
-                <th className='p-3 text-sm font-semibold tracking-wide text-left'>By</th>
+                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Faculty</th>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>No of authors</th>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>Status</th>
+                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Published on</th>
+                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Type</th>
+                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Capstone/Non-Capstone</th>
               </tr>
             </thead>
             <tbody className='divide-y divide-gray-100'>
               <tr>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>1</td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Automated Gym Exercise Form Checker: Deep-Learning Based Pose Estimation</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap truncate max-w-[150px] hover:whitespace-normal'>
+                  Automated Gym Exercise Form Checker: Deep-Learning Based Pose Estimation
+                </td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Dr.Bharathi R</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>5</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
                   <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-80 bg-yellow-200 rounded-lg bg-opacity-50'>Accepted</span>
                 </td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Jan 2024</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Conference</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Capstone</td>
               </tr>
               <tr>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2</td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Player Performance Analysis</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap truncate max-w-[150px] hover:whitespace-normal'>
+                  Player Performance Analysis
+                </td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Dr. Arti Arya</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>3</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
-                  <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-80 bg-yellow-200 rounded-lg bg-opacity-50'>Accepted (yet to receive)</span>
+                  <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-gray-80 bg-gray-200 rounded-lg bg-opacity-50'>Accepted (yet to receive)</span>
                 </td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Jan 2024</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Journal</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Capstone</td>
               </tr>
               <tr>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>3</td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Intersection of Machine Learning, Deep Learning and Transformers to Combat Fake News in Kannada Language</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap truncate max-w-[150px] hover:whitespace-normal'>
+                  Intersection of Machine Learning, Deep Learning and Transformers to Combat Fake News in Kannada Language
+                </td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Dr.Bharathi R</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>5</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
                   <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-80 bg-yellow-200 rounded-lg bg-opacity-50'>Accepted</span>
                 </td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Jan 2024</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Conference</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Capstone</td>
               </tr>
               <tr>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>4</td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Ensemble of Multimodal Deep Learning Models for Violin Bowing Techniques Classification</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap truncate max-w-[150px] hover:whitespace-normal'>
+                  Ensemble of Multimodal Deep Learning Models for Violin Bowing Techniques Classification
+                </td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Dr.Kamatchi Priya</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>6</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
                   <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-80 bg-yellow-200 rounded-lg bg-opacity-50'>Accepted</span>
                 </td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Jan 2024</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Conference</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Non-Capstone</td>
               </tr>
             </tbody>
           </table>
         </div>
         
+        <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 md:hidden">
+          <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
+            <div className='flex items-center space-x-2 text-sm py-2'>
+              <div className='text-blue-500 font-bold'>Dr.Bharathi R</div>
+              <div className='text-gray-500'>Jan 2024</div>
+              <div>
+                <span className='p-1.5 text-sm font-medium uppercase rounded-lg tracking-wider text-green-800 bg-green-200'>Accepted</span>
+              </div>
+            </div>
+            <div className='text-sm text-gray-700'>Automated Gym Exercise Form Checker: Deep-Learning Based Pose Estimation</div>
+            <div className='text-sm font-medium text-black'>Capstone</div>
+          </div>
+          <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
+            <div className='flex items-center space-x-2 text-sm py-2'>
+              <div className='text-blue-500 font-bold'>Dr. Arti Arya</div>
+              <div className='text-gray-500'>Jan 2024</div>
+              <div>
+                <span className='p-1.5 text-sm font-medium uppercase rounded-lg tracking-wider text-green-800 bg-green-200'>Accepted</span>
+              </div>
+            </div>
+            <div className='text-sm text-gray-700'>Player Performance Analysis</div>
+            <div className='text-sm font-medium text-black'>Capstone</div>
+          </div>
+          <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
+            <div className='flex items-center space-x-2 text-sm py-2'>
+              <div className='text-blue-500 font-bold'>Dr.Bharathi R</div>
+              <div className='text-gray-500'>Jan 2024</div>
+              <div>
+                <span className='p-1.5 text-sm font-medium uppercase rounded-lg tracking-wider text-green-800 bg-green-200'>Accepted</span>
+              </div>
+            </div>
+            <div className='text-sm text-gray-700'>Intersection of Machine Learning, Deep Learning and Transformers to Combat Fake News in Kannada Language</div>
+            <div className='text-sm font-medium text-black'>Capstone</div>
+          </div>
+          <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
+            <div className='flex items-center space-x-2 text-sm py-2'>
+              <div className='text-blue-500 font-bold'>Dr.Kamatchi Priya</div>
+              <div className='text-gray-500'>Jan 2024</div>
+              <div>
+                <span className='p-1.5 text-sm font-medium uppercase rounded-lg tracking-wider text-green-800 bg-green-200'>Accepted</span>
+              </div>
+            </div>
+            <div className='text-sm text-gray-700'>Ensemble of Multimodal Deep Learning Models for Violin Bowing Techniques Classification</div>
+            <div className='text-sm font-medium text-black'>Non-Capstone</div>
+          </div>
+        </div>
 
       </div>
     </main>
