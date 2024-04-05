@@ -151,9 +151,9 @@ export default function Home() {
     },[])
   return (
     <main className="bg-[#d5e7eb] h-max w-screen flex justify-end overflow-hidden overflow-y-auto">
-      <div className="h-max bg-white m-3 w-[79%] rounded-2xl p-7 flex flex-col shadow">
+      <div className="h-max bg-white m-3 w-screen md:w-[79%] rounded-2xl p-7 flex flex-col shadow">
         <div className='flex justify-between flex-row w-[100%]'>
-          <div className='flex justify-start flex-col'>
+          <div className='flex justify-start flex-col pt-8'>
             <h1 className={`${roboto.className} text-black text-4xl lg:text-4xl`}>Publications</h1>
             {totalPubs!=0 ? <div className={`${roboto.className} text-black text-xl`}>{totalPubs} total</div> : <div className='px-2 py-4 my-1 bg-slate-300 animate-pulse rounded-lg'></div>}
           </div>

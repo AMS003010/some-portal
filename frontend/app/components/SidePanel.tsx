@@ -20,12 +20,12 @@ export default function SidePanel() {
 
     return(
         <>
-            <div className="absolute text-blue-900 text-4xl top-5 left-4 cursor-pointer" onClick={openbar}>
+            <div className="absolute text-blue-900 text-4xl top-8 left-8 cursor-pointer" onClick={openbar}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
                 </svg>
             </div>
-            <div className='sidebar fixed top-0 bottom-0 lg:left-0 left-[-300px] p-2 w-64 overflow-y-auto text-center bg-gradient-to-r from-[#170a4b] to-[#12073a]'>
+            <div className='sidebar fixed z-10 top-0 bottom-0 lg:left-0 left-[-300px] p-2 w-64 h-dvh overflow-y-auto text-center bg-gradient-to-r from-[#170a4b] to-[#12073a]'>
                 <div>
                     <div className='flex justify-center items-center'>
                         <Image src={PesLogo} alt='PES logo' className='w-28 lg:w-40 lg:mt-3 cursor-pointer' onClick={openbar}/>
