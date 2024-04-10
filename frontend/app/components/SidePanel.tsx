@@ -14,21 +14,27 @@ const nunito = Nunito({
 export default function SidePanel() {
 
     const openbar = () => {
-        const sidebar = document.querySelector('.sidebar');
-        sidebar?.classList.toggle('left-[-300px]');
-    }
+        const screenWidth = window.innerWidth;
+        if (screenWidth <= 768) {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar?.classList.toggle('translate-x-[18.5rem]');
+        }
+    }    
 
     return(
         <>
-            <div className="absolute text-blue-900 text-4xl top-8 left-8 cursor-pointer" onClick={openbar}>
+            <div className="absolute text-blue-900 text-4xl top-8 left-8 cursor-pointer block lg:hidden" onClick={openbar}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
                 </svg>
             </div>
-            <div className='sidebar fixed z-10 top-0 bottom-0 lg:left-0 left-[-300px] p-2 w-64 h-dvh overflow-y-auto text-center bg-gradient-to-r from-[#170a4b] to-[#12073a]'>
+            <div className='sidebar fixed z-10 top-0 bottom-0 lg:left-0 left-[-300px] p-2 w-64 h-dvh overflow-y-auto text-center bg-gradient-to-r from-[#170a4b] to-[#12073a] transform transition duration-300'>
                 <div>
-                    <div className='flex justify-center items-center'>
-                        <Image src={PesLogo} alt='PES logo' className='w-28 lg:w-40 lg:mt-3 cursor-pointer' onClick={openbar}/>
+                    <div className='flex justify-around lg:justify-center items-center'>
+                        <Image src={PesLogo} alt='PES logo' className='w-28 lg:w-40 lg:mt-3 cursor-pointer'/>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 block lg:hidden" onClick={openbar}>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
                         <Image src={PesLogo} alt='PES logo' className='w-28 lg:w-40 lg:mt-3 cursor-pointer hidden'/>
                     </div>
                     <hr className=' flex justify-center border-t-2 border-[#FFF] mt-4'/>

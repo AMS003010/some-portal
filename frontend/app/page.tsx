@@ -89,7 +89,7 @@ export default function Home() {
     useEffect(() => {
         const fetchPubs = async () => {
             try {
-                //await new Promise(resolve => setTimeout(resolve,7000));
+                await new Promise(resolve => setTimeout(resolve,7000));
                 const response = await fetch('http://localhost:8000/publications',{
                     method:'GET',
                     headers:{'Content-type':'appliaction/json'}
@@ -160,12 +160,12 @@ export default function Home() {
           <div className='flex justify-end'>
             <div className='hidden md:flex justify-between gap-8'>
               <div>
-                {publishPubs!=0 ? <div className="text-black text-1xl lg:text-4xl mb-2">{publishPubs}</div> : <div className='px-2 py-4 bg-slate-300 animate-pulse rounded-lg'></div>}
+                {publishPubs!=0 ? <div className="text-black text-4xl mb-2">{publishPubs}</div> : <div className='px-2 py-4 bg-slate-300 animate-pulse rounded-lg'></div>}
                 <div className="text-[#6c717e]">Published</div>
               </div>
               <div className='bg-[#e9eaed] w-[2px] h-[85%]'></div>
               <div>
-              {pendPubs!=0 ? <div className="text-black text-1xl lg:text-4xl mb-2">{pendPubs}</div> : <div className='px-2 py-4 bg-slate-300 animate-pulse rounded-lg'></div>}
+              {pendPubs!=0 ? <div className="text-black text-4xl mb-2">{pendPubs}</div> : <div className='px-2 py-4 bg-slate-300 animate-pulse rounded-lg'></div>}
                 <div className="text-[#6c717e]">Pending</div>
               </div>
             </div>
