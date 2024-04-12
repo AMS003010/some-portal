@@ -29,23 +29,23 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <hr className="flex justify-center border-t-2 border-[#e9eaed] my-5"/>
+        <hr className="flex justify-center border-t-2 border-gray-400 mt-5 mb-2"/>
 
         <div className='overflow-auto rounded-lg shadow hidden md:block'>
           <table className='w-full text-black'>
-            <thead className='bg-gray-50 border-b-2 border-gray-200'>
+            <thead className='bg-gray-50 border-b-2 border-gray-400'>
               <tr>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>No</th>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>Title</th>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>Faculty</th>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>No of authors</th>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>Status</th>
-                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Published on</th>
+                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Dates</th>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>Type</th>
-                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Capstone/Non-Capstone</th>
+                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Capstone</th>
               </tr>
             </thead>
-            <tbody className='divide-y divide-gray-100'>
+            <tbody className='divide-y divide-gray-600'>
               <tr>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>1</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap truncate max-w-[150px] hover:whitespace-normal'>
@@ -56,9 +56,9 @@ export default function Home() {
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
                   <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-80 bg-yellow-200 rounded-lg bg-opacity-50'>Accepted</span>
                 </td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Jan 2024</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>15 - 17 Jan 2024</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Conference</td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Capstone</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Yes</td>
               </tr>
               <tr>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2</td>
@@ -72,7 +72,7 @@ export default function Home() {
                 </td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Jan 2024</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Journal</td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Capstone</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Yes</td>
               </tr>
               <tr>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>3</td>
@@ -84,13 +84,13 @@ export default function Home() {
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
                   <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-80 bg-yellow-200 rounded-lg bg-opacity-50'>Accepted</span>
                 </td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Jan 2024</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>13 Jan 2024</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Conference</td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Capstone</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Yes</td>
               </tr>
               <tr>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>4</td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap truncate max-w-[150px] hover:whitespace-normal'>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap truncate max-w-[2rem] transition-all duration-300 ease-in-out hover:whitespace-normal'>
                   Ensemble of Multimodal Deep Learning Models for Violin Bowing Techniques Classification
                 </td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Dr.Kamatchi Priya</td>
@@ -98,19 +98,19 @@ export default function Home() {
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
                   <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-80 bg-yellow-200 rounded-lg bg-opacity-50'>Accepted</span>
                 </td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Jan 2024</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>17 Feb 2024</td>
                 <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Conference</td>
-                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Non-Capstone</td>
+                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>No</td>
               </tr>
             </tbody>
           </table>
         </div>
         
-        <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 md:hidden">
+    {/*    <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 md:hidden">
           <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
             <div className='flex items-center space-x-2 text-sm py-2'>
               <div className='text-blue-500 font-bold'>Dr.Bharathi R</div>
-              <div className='text-gray-500'>Jan 2024</div>
+              <div className='text-gray-500'> 15 - 17 Jan 2024</div>
               <div>
                 <span className='p-1.5 text-sm font-medium uppercase rounded-lg tracking-wider text-green-800 bg-green-200'>Accepted</span>
               </div>
@@ -151,7 +151,7 @@ export default function Home() {
             <div className='text-sm text-gray-700'>Ensemble of Multimodal Deep Learning Models for Violin Bowing Techniques Classification</div>
             <div className='text-sm font-medium text-black'>Non-Capstone</div>
           </div>
-        </div>
+  </div> */}
 
       </div>
     </main>
