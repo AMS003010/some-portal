@@ -4,15 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 
-	_ "github.com/lib/pq"
+	//"os"
+
+	//_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var DB *sql.DB
 
 func InitDB() {
-	dbURL := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+	/* dbURL := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		os.Getenv("POSTGRES_HOST"),
 		os.Getenv("POSTGRES_PORT"),
 		os.Getenv("POSTGRES_USER"),
@@ -22,6 +24,11 @@ func InitDB() {
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		log.Fatal(err)
+	} */
+	db, err := sql.Open("sqlite3", "database.sqlite")
+	if err != nil {
+		fmt.Println("Error opening database:", err)
+		return
 	}
 	DB = db
 	CreateTable()
@@ -31,7 +38,7 @@ func InitDB() {
 func CreateTable() {
 	query := `
 	CREATE TABLE IF NOT EXISTS publications (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     faculty_name TEXT,
     start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	end_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -20,6 +20,7 @@
 
 # Ignore SQLite database file
 publications.db
+database.sqlite
 
 # IDE-specific files (VSCode, GoLand, etc.)
 .idea/

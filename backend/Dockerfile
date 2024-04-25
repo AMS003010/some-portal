@@ -1,14 +1,12 @@
 FROM golang:1.22-alpine3.19
 
-RUN mkdir /app
+WORKDIR /app
 
 COPY . /app
 
-WORKDIR /app
+RUN go get 
 
-RUN go get -d -v ./...
-
-RUN go build -o api .
+RUN go mod tidy
 
 EXPOSE 5000
-CMD [ "./api" ]
+CMD [ "go run main.go" ]
