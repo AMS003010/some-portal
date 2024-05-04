@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/achyuthcodes30/backend/db"
@@ -103,6 +104,73 @@ func GetPublication(c *gin.Context) {
 	c.JSON(http.StatusOK, publication)
 }
 
+/* func GetAllPublicationsNew(c *gin.Context) {
+	query := "SELECT * FROM publications"
+	var wg sync.WaitGroup
+	publicationChan := make(chan models.Publication)
+
+	wg.Add(1)
+
+	go func() {
+		fmt.Println("running query")
+		defer wg.Done()
+		rows, err := db.DB.Query(query)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var publication models.Publication
+			var typesStr, authorNamesStr, linksStr string
+			err := rows.Scan(
+				&publication.ID,
+				&publication.FacultyName,
+				&publication.StartDate,
+				&publication.EndDate,
+				&typesStr,
+				&publication.Title,
+				&publication.Conference_Or_Journal_Name,
+				&publication.Status,
+				&publication.TotalAuthors,
+				&authorNamesStr,
+				&publication.IsCapstone,
+				&linksStr,
+				&publication.ImpactFactor,
+				&publication.ScopusIndexation,
+			)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+
+			publication.Types = strings.Split(typesStr, ",")
+			publication.AuthorNames = strings.Split(authorNamesStr, ",")
+			publication.Links = strings.Split(linksStr, ",")
+			publicationChan <- publication
+			fmt.Println("Channle populated!")
+		}
+		if err := rows.Err(); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	}()
+
+	go func() {
+		wg.Wait()              // Wait for all goroutines to complete before closing the channel
+		close(publicationChan) // Close the channel once all data is sent
+	}()
+
+	var publications []models.Publication
+	fmt.Println("Query done!")
+	for publication := range publicationChan {
+		publications = append(publications, publication)
+	}
+
+	c.JSON(http.StatusOK, publications)
+} */
+
 func GetAllPublications(c *gin.Context) {
 	startTimeStr := c.Query("starttime")
 	endTimeStr := c.Query("endtime")
@@ -123,13 +191,13 @@ func GetAllPublications(c *gin.Context) {
 	}
 	offset := (page - 1) * pageSize
 
-	startTime, err := time.Parse(time.RFC3339, startTimeStr)
+	startTime, err := time.Parse("2006-01-02T15:04:05Z", startTimeStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid start time format"})
 		return
 	}
 
-	endTime, err := time.Parse(time.RFC3339, endTimeStr)
+	endTime, err := time.Parse("2006-01-02T15:04:05Z", endTimeStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid end time format"})
 		return
@@ -168,10 +236,14 @@ func GetAllPublications(c *gin.Context) {
 	query += " LIMIT ? OFFSET ?"
 	queryParams = append(queryParams, pageSize, offset)
 
+	var wg sync.WaitGroup
 	publicationChan := make(chan models.Publication)
-	defer close(publicationChan)
+
+	wg.Add(1)
 
 	go func() {
+
+		defer wg.Done()
 		rows, err := db.DB.Query(query, queryParams...)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -214,7 +286,13 @@ func GetAllPublications(c *gin.Context) {
 		}
 	}()
 
+	go func() {
+		wg.Wait()
+		close(publicationChan)
+	}()
+
 	var publications []models.Publication
+
 	for publication := range publicationChan {
 		publications = append(publications, publication)
 	}

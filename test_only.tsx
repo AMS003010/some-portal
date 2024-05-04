@@ -1,7 +1,7 @@
 "use client"
 import { Roboto } from 'next/font/google'
 import { resolve } from 'path';
-import axios from 'axios';
+
 import { useEffect,useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 
@@ -37,18 +37,18 @@ export default function Home() {
   interface Publication {
     ID: number,
     FacultyName: string,
-    StartDate: Date,
-    EndDate: Date,
-    Types: string[],
+    date: string,
+    PublicationType: string,
     Title: string,
     Conference_Or_Journal_Name: string,
-    Status: string,
+    Statu: string,
     TotalAuthors: string,
     AuthorNames: string[],
     IsCapstone: string,
     Links: string[],
     ImpactFactor: string,
     ScopusIndexation: string,
+    id:  string
   }
 
   interface DataProp {
@@ -89,31 +89,32 @@ export default function Home() {
     useEffect(() => {
         const fetchPubs = async () => {
             try {
-                const currentTimestamp: string = new Date().toISOString().slice(0, -5) + 'Z';
-                const response = await axios.get(`http://127.0.0.1:5000/publications?starttime=2023-01-01T00:00:00Z&endtime=${currentTimestamp}`,{
-                    headers:{'Content-type':'application/json'}
+                await new Promise(resolve => setTimeout(resolve,7000));
+                const response = await fetch('http://localhost:8000/publications',{
+                    method:'GET',
+                    headers:{'Content-type':'appliaction/json'}
                 });
-                if(!response.data.status){
+                if(!response.ok){
                     console.log("Unable fetching publications");
                 }
-                const data: Publication[] = await response.data;
+                const data: Publication[] = await response.json();
                 let acceptedCount = 0;
                 let pendingCount = 0;
-                let publishedcount = 0;
+                let publisgedcount = 0;
                 data.forEach((publication) => {
-                  if (publication.Status === "Accepted") {
+                  if (publication.Statu === "Accepted") {
                     acceptedCount++;
-                  } else if (publication.Status === "Pending") {
+                  } else if (publication.Statu === "Pending") {
                     pendingCount++;
-                  } else if (publication.Status === "Published") {
-                    publishedcount++;
+                  } else if (publication.Statu === "Published") {
+                    publisgedcount++;
                   }
                 });
 
                 const pub_tot = data.length;
                 setPubs(data);
                 setAcceptPubs(acceptedCount);
-                setPublishPubs(publishedcount);
+                setPublishPubs(publisgedcount);
                 setPendPubs(pendingCount);
                 settotalPubs(pub_tot);
                 
@@ -122,7 +123,7 @@ export default function Home() {
                   datasets: [
                       {
                           label: 'Publication Status',
-                          data: [publishedcount, acceptedCount, pendingCount],
+                          data: [publisgedcount, acceptedCount, pendingCount],
                           
                           backgroundColor: ['#11b765', '#f8821e', '#ef4437'],
                         }, 
@@ -197,30 +198,18 @@ export default function Home() {
                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{publication.FacultyName}</td>
                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{publication.TotalAuthors}</td>
                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
-                      {publication.Status=="Published" ? (
-                        <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-80 bg-yellow-200 rounded-lg bg-opacity-50'>{publication.Status}</span>
-                      ) : publication.Status == "Accepted" ? (
-                        <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-orange-80 bg-orange-200 rounded-lg bg-opacity-50'>{publication.Status}</span>
+                      {publication.Statu=="Published" ? (
+                        <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-80 bg-yellow-200 rounded-lg bg-opacity-50'>{publication.Statu}</span>
+                      ) : publication.Statu == "Accepted" ? (
+                        <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-orange-80 bg-orange-200 rounded-lg bg-opacity-50'>{publication.Statu}</span>
                       ) : (
-                        <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-blue-80 bg-blue-200 rounded-lg bg-opacity-50'>{publication.Status}</span>
+                        <span className='p-1.5 text-xs font-medium uppercase tracking-wider text-blue-80 bg-blue-200 rounded-lg bg-opacity-50'>{publication.Statu}</span>
                       )
                       }
                     </td>
-                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{ publication.StartDate == publication.EndDate ? ` ${new Date(publication.StartDate).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    })}` : ` ${new Date(publication.StartDate).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    })} -  ${new Date(publication.EndDate).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    })} `}</td>
-                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{publication.Types.join(",")}</td>
-                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{publication.IsCapstone ? "Yes" : "No"}</td>
+                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{publication.date}</td>
+                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{publication.PublicationType}</td>
+                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{publication.IsCapstone}</td>
                   </tr>
                 ))}
                 </tbody>
@@ -254,9 +243,16 @@ export default function Home() {
             <div className='bg-white space-y-3 p-4 rounded-lg shadow' key={publication.ID}>
               <div className='flex items-center space-x-2 text-sm py-2'>
                 <div className='text-blue-500 font-bold text-[0.8rem] lg:text-sm'>{publication.FacultyName}</div>
-                <div className='text-gray-500 hidden'>{` ${publication.StartDate} -  ${publication.EndDate} `}</div>
+                <div className='text-gray-500 hidden'>{publication.date}</div>
                 <div>
-                    <span className='p-1.5 text-[0.6rem] lg:text-sm font-medium uppercase rounded-lg tracking-wider text-blue-800 bg-blue-200'>{publication.Status}</span>
+                  {publication.Statu=="Published" ? (
+                    <span className='p-1.5 text-[0.6rem] lg:text-sm font-medium uppercase rounded-lg tracking-wider text-green-800 bg-green-200'>{publication.Statu}</span>
+                    ) : publication.Statu == "Accepted" ? (
+                    <span className='p-1.5 text-[0.6rem] lg:text-sm font-medium uppercase rounded-lg tracking-wider text-orange-800 bg-orange-200'>{publication.Statu}</span>
+                    ) : (
+                    <span className='p-1.5 text-[0.6rem] lg:text-sm font-medium uppercase rounded-lg tracking-wider text-blue-800 bg-blue-200'>{publication.Statu}</span>
+                    )
+                  }
                 </div>
               </div>
               <div className='text-sm text-gray-700'>{publication.Title}</div>
@@ -278,6 +274,7 @@ export default function Home() {
             ))
           )}
         </div>
+
       </div>
     </main>
   );
