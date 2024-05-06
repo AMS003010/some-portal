@@ -170,11 +170,11 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <hr className="flex justify-center border-t-2 border-gray-400 mt-5 mb-2"/>
+        <hr className="flex justify-center border-t-2 border-gray-200 mt-5 mb-2"/>
 
         <div className='overflow-auto rounded-lg shadow hidden md:block mb-5'>
           <table className='w-full text-black'>
-            <thead className='bg-gray-50 border-b-2 border-gray-400'>
+            <thead className='bg-gray-50 border-b-2 border-gray-200'>
               <tr>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>No</th>
                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>Title</th>
@@ -248,6 +248,7 @@ export default function Home() {
         <div className='w-full md:col-span-2 h-[50vh] mb-2 md:m-auto p-4 border rounded-lg bg-white shadow'>
           {pub.length!=0 ? <Doughnut data={chartData} options={chartOptions} /> : <div className='px-2 py-4 my-1 bg-slate-300 animate-pulse rounded-lg w-[100%] h-[100%]'></div>}
         </div>
+
         <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 md:hidden">
           {pub.length!=0 ? (pub.map((publication) => (
             <div className='bg-white space-y-3 p-4 rounded-lg shadow' key={publication.ID}>
@@ -258,11 +259,26 @@ export default function Home() {
                     <span className='p-1.5 text-[0.6rem] lg:text-sm font-medium uppercase rounded-lg tracking-wider text-blue-800 bg-blue-200'>{publication.Status}</span>
                 </div>
               </div>
+              <div className='text-sm text-gray-700'>{publication.Title}</div>
+              <div className='text-sm font-medium text-black'>{publication.IsCapstone}</div>
+            </div>
+          ))) : (
+            [...Array(5)].map((_,index) => (
+              <div className='bg-white space-y-3 p-4 rounded-lg shadow' key={index}>
+                <div className='flex items-center space-x-2 text-sm py-2'>
+                  <div className='text-blue-500 font-bold text-[0.8rem] lg:text-sm animate-pulse px-6 py-3 rounded-lg bg-slate-300'></div>
+                  <div className='text-gray-500 hidden md:block'></div>
+                  <div>
+                    <span className='p-1.5 text-[0.6rem] lg:text-sm font-medium uppercase rounded-lg tracking-wider bg-slate-300 animate-pulse px-6 py-2'></span>
+                  </div>
+                </div>
+                <div className='text-sm text-gray-700 animate-pulse px-2 py-4 rounded-lg bg-slate-300'></div>
+                <div className='text-sm font-medium text-black animate-pulse px-2 py-4 rounded-lg bg-slate-300'></div>
               </div>
-          ))) : (<></>)}
-
-      </div>
+            ))
+          )}
+        </div>
       </div>
     </main>
-  )
+  );
 }
