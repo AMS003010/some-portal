@@ -1,16 +1,17 @@
 package controllers
 
 import (
-	"database/sql"
-	"log"
+	"context"
 	"net/http"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/achyuthcodes30/backend/db"
+	db "github.com/achyuthcodes30/backend/sheets"
+
 	"github.com/achyuthcodes30/backend/models"
+	"github.com/achyuthcodes30/backend/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,151 +26,133 @@ func AddPublication(c *gin.Context) {
 	authorsStr := strings.Join(publication.AuthorNames, ",")
 	linksStr := strings.Join(publication.Links, ",")
 
-	capstone := 0
+	capstone := ""
 	if publication.IsCapstone == 1 {
-		capstone = 1
+		capstone = "CAPSTONE"
+	} else {
+		capstone = "NON CAPSTONE"
 	}
-
-	stmt, err := db.DB.Prepare("INSERT INTO publications(faculty_name, start_date, end_date, types, title, conference_name, status, total_authors, author_names, is_capstone, links, impact_factor, scopus_indexation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	id, err := utils.HexaIDGenerator()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	defer stmt.Close()
 
-	_, err = stmt.Exec(
-		publication.FacultyName,
-		publication.StartDate.Format("2006-01-02 15:04:05"),
-		publication.EndDate.Format("2006-01-02 15:04:05"),
-		typesStr,
-		publication.Title,
-		publication.Conference_Or_Journal_Name,
-		publication.Status,
-		publication.TotalAuthors,
-		authorsStr,
-		capstone,
-		linksStr,
-		publication.ImpactFactor,
-		publication.ScopusIndexation,
-	)
+	isRecordUnique, err := utils.IsRecordUnique(publication.Title)
 	if err != nil {
-		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Publication with this title already exists"})
-			return
-		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Publication added successfully"})
-}
-
-func GetPublication(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid publication ID"})
+	if !isRecordUnique {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Publication with this title already exists"})
 		return
 	}
 
-	var publication models.Publication
-	var typesStr, authorNamesStr, linksStr string
-	err = db.DB.QueryRow("SELECT * FROM publications WHERE id = ?", id).Scan(
-		&publication.ID,
-		&publication.FacultyName,
-		&publication.StartDate,
-		&publication.EndDate,
-		&typesStr,
-		&publication.Title,
-		&publication.Conference_Or_Journal_Name,
-		&publication.Status,
-		&publication.TotalAuthors,
-		&authorNamesStr,
-		&publication.IsCapstone,
-		&linksStr,
-		&publication.ImpactFactor,
-		&publication.ScopusIndexation,
-	)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Publication not found"})
-			return
-		}
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
-		log.Fatal((err))
-		return
-	}
-	publication.Types = strings.Split(typesStr, ",")
-	publication.AuthorNames = strings.Split(authorNamesStr, ",")
-	publication.Links = strings.Split(linksStr, ",")
-	c.JSON(http.StatusOK, publication)
-}
-
-/* func GetAllPublicationsNew(c *gin.Context) {
-	query := "SELECT * FROM publications"
 	var wg sync.WaitGroup
-	publicationChan := make(chan models.Publication)
 
 	wg.Add(1)
 
 	go func() {
-		fmt.Println("running query")
 		defer wg.Done()
-		rows, err := db.DB.Query(query)
+
+		err := db.Store.Insert(
+			models.PublicationinSheet{
+				ID:                      id,
+				FacultyName:             publication.FacultyName,
+				StartDate:               publication.StartDate.Format("2006-01-02"),
+				EndDate:                 publication.EndDate.Format("2006-01-02"),
+				Types:                   typesStr,
+				Title:                   publication.Title,
+				ConferenceOrJournalName: publication.ConferenceOrJournalName,
+				Status:                  publication.Status,
+				TotalAuthors:            publication.TotalAuthors,
+				AuthorNames:             authorsStr,
+				IsCapstone:              capstone,
+				Links:                   linksStr,
+				ImpactFactor:            publication.ImpactFactor,
+				ScopusIndexation:        publication.ScopusIndexation,
+			},
+		).Exec(context.Background())
+
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		defer rows.Close()
+		c.JSON(http.StatusCreated, gin.H{"message": "Publication added successfully"})
+	}()
 
-		for rows.Next() {
-			var publication models.Publication
-			var typesStr, authorNamesStr, linksStr string
-			err := rows.Scan(
-				&publication.ID,
-				&publication.FacultyName,
-				&publication.StartDate,
-				&publication.EndDate,
-				&typesStr,
-				&publication.Title,
-				&publication.Conference_Or_Journal_Name,
-				&publication.Status,
-				&publication.TotalAuthors,
-				&authorNamesStr,
-				&publication.IsCapstone,
-				&linksStr,
-				&publication.ImpactFactor,
-				&publication.ScopusIndexation,
-			)
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-				return
-			}
+	wg.Wait()
 
-			publication.Types = strings.Split(typesStr, ",")
-			publication.AuthorNames = strings.Split(authorNamesStr, ",")
-			publication.Links = strings.Split(linksStr, ",")
-			publicationChan <- publication
-			fmt.Println("Channle populated!")
-		}
-		if err := rows.Err(); err != nil {
+}
+
+func GetPublication(c *gin.Context) {
+	id := c.Param("id")
+	if len(id) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Please enter a valid ID"})
+	}
+
+	var wg sync.WaitGroup
+	publicationChan := make(chan models.PublicationinSheet)
+	wg.Add(1)
+	go func() {
+
+		defer wg.Done()
+		var foundPublication []models.PublicationinSheet
+
+		err := db.Store.Select(&foundPublication).Where("ID = ?", id).Exec(context.Background())
+		//err := db.Store.Select(&publication).Exec(context.Background())
+		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-	}()
 
+		publicationChan <- foundPublication[0]
+
+	}()
 	go func() {
-		wg.Wait()              // Wait for all goroutines to complete before closing the channel
-		close(publicationChan) // Close the channel once all data is sent
+		defer close(publicationChan)
+		wg.Wait()
 	}()
 
-	var publications []models.Publication
-	fmt.Println("Query done!")
-	for publication := range publicationChan {
-		publications = append(publications, publication)
-	}
+	var publication models.PublicationInJSON
 
-	c.JSON(http.StatusOK, publications)
-} */
+	for pub := range publicationChan {
+		Types := strings.Split(pub.Types, ",")
+		AuthorNames := strings.Split(pub.AuthorNames, ",")
+		Links := strings.Split(pub.Links, ",")
+
+		startDate, err := time.Parse("2006-01-02", pub.StartDate)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err})
+			return
+		}
+		endDate, err := time.Parse("2006-01-02", pub.EndDate)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err})
+			return
+		}
+
+		publication = models.PublicationInJSON{
+			ID:                      pub.ID,
+			FacultyName:             pub.FacultyName,
+			StartDate:               startDate,
+			EndDate:                 endDate,
+			Types:                   Types,
+			Title:                   pub.Title,
+			ConferenceOrJournalName: pub.ConferenceOrJournalName,
+			Status:                  pub.Status,
+			TotalAuthors:            pub.TotalAuthors,
+			AuthorNames:             AuthorNames,
+			IsCapstone:              pub.IsCapstone,
+			Links:                   Links,
+			ImpactFactor:            pub.ImpactFactor,
+			ScopusIndexation:        pub.ScopusIndexation,
+		}
+
+		c.JSON(http.StatusOK, publication)
+	}
+}
 
 func GetAllPublications(c *gin.Context) {
 	startTimeStr := c.Query("starttime")
@@ -191,120 +174,139 @@ func GetAllPublications(c *gin.Context) {
 	}
 	offset := (page - 1) * pageSize
 
-	startTime, err := time.Parse("2006-01-02T15:04:05Z", startTimeStr)
+	startTime, err := time.Parse("2006-01-02", startTimeStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid start time format"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
 
-	endTime, err := time.Parse("2006-01-02T15:04:05Z", endTimeStr)
+	endTime, err := time.Parse("2006-01-02", endTimeStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid end time format"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
 
-	startTimeFormatted := startTime.Format("2006-01-02 15:04:05")
-	endTimeFormatted := endTime.Format("2006-01-02 15:04:05")
+	/*startTimeFormatted := startTime.Format("2006-01-02")
+	endTimeFormatted := endTime.Format("2006-01-02") */
 
-	query := "SELECT * FROM publications WHERE (start_date BETWEEN ? AND ? OR end_date BETWEEN ? AND ?)"
+	query := ""
 	var queryParams []interface{}
-	queryParams = append(queryParams, startTimeFormatted, endTimeFormatted, startTimeFormatted, endTimeFormatted)
+
+	//queryParams = append(queryParams, startTimeFormatted, endTimeFormatted, startTimeFormatted, endTimeFormatted)
+
 	if typeFilter != "" {
-		query += " AND types LIKE ?"
+		if len(query) == 0 {
+			query = "Publication Type(Journal/Conference/ Book Chapter) LIKE ?"
+		} else {
+			query += " AND Publication Type(Journal/Conference/ Book Chapter) LIKE ?"
+		}
 		queryParams = append(queryParams, "%"+typeFilter+"%")
 	}
 
 	if facultyNameFilter != "" {
-		query += " AND faculty_name = ?"
+		if len(query) == 0 {
+			query = "Name of the faculties in PES University (Currently) = ?"
+		} else {
+			query += " AND Name of the faculties in PES University (Currently) = ?"
+		}
 		queryParams = append(queryParams, facultyNameFilter)
 	}
 	if statusFilter != "" {
-		query += " AND status = ?"
+		if len(query) == 0 {
+			query = "STATUS=?"
+		} else {
+			query += " AND Status=?"
+		}
 		queryParams = append(queryParams, statusFilter)
 	}
 
 	if isCapstoneFilter != "" {
-		capstone, err := strconv.Atoi(isCapstoneFilter)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid is_capstone filter value"})
-			return
+		capstone := ""
+		if isCapstoneFilter == "1" {
+			capstone = "CAPSTONE"
+		} else {
+			capstone = "NON CAPSTONE"
 		}
-		query += " AND is_capstone = ?"
+		if len(query) == 0 {
+			query = "Capstone/ Non Capstone = ?"
+		} else {
+			query += " AND Capstone/ Non Capstone = ?"
+		}
 		queryParams = append(queryParams, capstone)
 	}
 
-	query += " LIMIT ? OFFSET ?"
-	queryParams = append(queryParams, pageSize, offset)
-
 	var wg sync.WaitGroup
-	publicationChan := make(chan models.Publication)
+	publicationChan := make(chan []models.PublicationinSheet)
 
 	wg.Add(1)
 
 	go func() {
 
 		defer wg.Done()
-		rows, err := db.DB.Query(query, queryParams...)
+		var publication []models.PublicationinSheet
+
+		err := db.Store.Select(&publication).Where(query, queryParams...).Limit(uint64(pageSize)).Offset(uint64(offset)).Exec(context.Background())
+		//err := db.Store.Select(&publication).Exec(context.Background())
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		defer rows.Close()
 
-		for rows.Next() {
-			var publication models.Publication
-			var typesStr, authorNamesStr, linksStr string
-			err := rows.Scan(
-				&publication.ID,
-				&publication.FacultyName,
-				&publication.StartDate,
-				&publication.EndDate,
-				&typesStr,
-				&publication.Title,
-				&publication.Conference_Or_Journal_Name,
-				&publication.Status,
-				&publication.TotalAuthors,
-				&authorNamesStr,
-				&publication.IsCapstone,
-				&linksStr,
-				&publication.ImpactFactor,
-				&publication.ScopusIndexation,
-			)
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-				return
-			}
+		allPublications := utils.DateFilter(publication, startTime, endTime)
 
-			publication.Types = strings.Split(typesStr, ",")
-			publication.AuthorNames = strings.Split(authorNamesStr, ",")
-			publication.Links = strings.Split(linksStr, ",")
-			publicationChan <- publication
-		}
-		if err := rows.Err(); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
+		publicationChan <- allPublications
 	}()
 
 	go func() {
+		defer close(publicationChan)
 		wg.Wait()
-		close(publicationChan)
 	}()
 
-	var publications []models.Publication
+	var publications []models.PublicationInJSON
 
-	for publication := range publicationChan {
-		publications = append(publications, publication)
+	for allpublications := range publicationChan {
+		for _, publication := range allpublications {
+			Types := strings.Split(publication.Types, ",")
+			AuthorNames := strings.Split(publication.AuthorNames, ",")
+			Links := strings.Split(publication.Links, ",")
+
+			startDate, err := time.Parse("2006-01-02", publication.StartDate)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err})
+				return
+			}
+			endDate, err := time.Parse("2006-01-02", publication.EndDate)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err})
+				return
+			}
+
+			publications = append(publications, models.PublicationInJSON{
+				ID:                      publication.ID,
+				FacultyName:             publication.FacultyName,
+				StartDate:               startDate,
+				EndDate:                 endDate,
+				Types:                   Types,
+				Title:                   publication.Title,
+				ConferenceOrJournalName: publication.ConferenceOrJournalName,
+				Status:                  publication.Status,
+				TotalAuthors:            publication.TotalAuthors,
+				AuthorNames:             AuthorNames,
+				IsCapstone:              publication.IsCapstone,
+				Links:                   Links,
+				ImpactFactor:            publication.ImpactFactor,
+				ScopusIndexation:        publication.ScopusIndexation,
+			})
+		}
 	}
 
 	c.JSON(http.StatusOK, publications)
 }
 
 func EditPublication(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid publication ID"})
-		return
+	id := c.Param("id")
+	if len(id) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Please enter a valid ID"})
 	}
 
 	var publication models.Publication
@@ -317,61 +319,77 @@ func EditPublication(c *gin.Context) {
 	authorsStr := strings.Join(publication.AuthorNames, ",")
 	linksStr := strings.Join(publication.Links, ",")
 
-	capstone := 0
+	capstone := ""
 	if publication.IsCapstone == 1 {
-		capstone = 1
+		capstone = "CAPSTONE"
+	} else {
+		capstone = "NON CAPSTONE"
 	}
 
-	stmt, err := db.DB.Prepare("UPDATE publications SET faculty_name=?, start_date=?, end_date=?, types=?, title=?, conference_name=?, status=?, total_authors=?, author_names=?, is_capstone=?, links=?, impact_factor=?, scopus_indexation=? WHERE id=?")
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	defer stmt.Close()
+	var wg sync.WaitGroup
 
-	_, err = stmt.Exec(
-		publication.FacultyName,
-		publication.StartDate.Format("2006-01-02 15:04:05"),
-		publication.EndDate.Format("2006-01-02 15:04:05"),
-		typesStr,
-		publication.Title,
-		publication.Conference_Or_Journal_Name,
-		publication.Status,
-		publication.TotalAuthors,
-		authorsStr,
-		capstone,
-		linksStr,
-		publication.ImpactFactor,
-		publication.ScopusIndexation,
-		id,
-	)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	wg.Add(1)
 
-	c.JSON(http.StatusOK, gin.H{"message": "Publication updated successfully"})
+	go func() {
+		defer wg.Done()
+		err := db.Store.Update(
+			map[string]interface{}{
+				"Name of the faculties in PES University (Currently)": publication.FacultyName,
+				"Publication / Conference Start Date":                 publication.StartDate.Format("2006-01-02"),
+				"End Date":                                            publication.EndDate.Format("2006-01-02"),
+				"Publication Type(Journal/Conference/ Book Chapter)":  typesStr,
+				"Title of the Paper/Book/Book chapter":                publication.Title,
+				"Journal Name/Book /Conference":                       publication.ConferenceOrJournalName,
+				"Status":                                              publication.Status,
+				"Total Authors":                                       publication.TotalAuthors,
+				"Authors":                                             authorsStr,
+				"Capstone/ Non Capstone":                              capstone,
+				"DOI/ link of the paper (Applicable for Journal Paper and Book Chapter)": linksStr,
+				"Impact Factor": publication.ImpactFactor,
+				"Q1/Q2/Q3/Q4/Scopus /WOS Indexed/Not Applicable": publication.ScopusIndexation,
+			}).Where("ID = ?", id).Exec(context.Background())
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Publication updated successfully"})
+	}()
+	/*
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	*/
+
+	wg.Wait()
 }
 
 func DeletePublication(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid publication ID"})
-		return
+	id := c.Param("id")
+	if len(id) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Please enter a valid ID"})
 	}
+	var wg sync.WaitGroup
 
-	stmt, err := db.DB.Prepare("DELETE FROM publications WHERE id=?")
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	defer stmt.Close()
+	wg.Add(1)
+	go func() {
+		var pub []models.PublicationinSheet
+		defer wg.Done()
+		err := db.Store.Select(&pub).Where("ID=?", id).Exec(context.Background())
+		if len(pub) == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Publication with this ID does not exist"})
+			return
+		}
+		err = db.Store.Delete().Where("ID=?", id).Exec(context.Background())
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 
-	_, err = stmt.Exec(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+		c.JSON(http.StatusOK, gin.H{"message": "Publication deleted successfully"})
+	}()
 
-	c.JSON(http.StatusOK, gin.H{"message": "Publication deleted successfully"})
+	wg.Wait()
+
 }
