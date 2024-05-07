@@ -4,8 +4,6 @@ import type { ReactNode } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-const SidePanel = dynamic(() => import('./components/SidePanel'), { ssr: false });
-
 const inter = Inter({ subsets: ["latin"] });
 
 interface RootLayoutProps {
@@ -20,8 +18,10 @@ export const metadata: Metadata = {
 export default function RootLayout({children}:RootLayoutProps){
   return (
     <html lang="en">
+      <head>
+        <meta name="keywords" content="PES EC Publication, Teachers Publiaction"/>
+      </head>
       <body>
-        <SidePanel/>
           {children}
       </body>
     </html>
