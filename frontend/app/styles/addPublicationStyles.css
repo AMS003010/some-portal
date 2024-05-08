@@ -1,0 +1,10 @@
+.rti--container input::placeholder {
+  /* Styles for the placeholder text */
+  color: rgb(107,116,140); 
+}
+
+
+.rti--container .rti--tag {
+    background-color: rgb(229 231 235);
+    padding: 0.25rem;
+}
