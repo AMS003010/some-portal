@@ -54,7 +54,7 @@ export default function SidePanel({index,setIndex}: SidePanelProps) {
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-7 h-7">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                             </svg>
-                            <span className={`${nunito.className} text-lg ml-2`}>My profile</span>
+                            <span className={`${nunito.className} text-lg ml-2`}>My Publications</span>
                         </div>
                         <div className='flex justify-start items-center my-1 hover:bg-[#21205e] rounded-lg py-4 text-[#FFF] hover:text-white pl-3 cursor-pointer' onClick={() => setIndex(1)}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-7 h-7">

@@ -66,8 +66,10 @@ export default function Home() {
   const [pub,setPubs] = useState<Publication[]>([]);
   const [totalPubs,settotalPubs] = useState<number>(0);
   const [acceptPubs,setAcceptPubs] = useState<number>(0);
-  const [pendPubs,setPendPubs] = useState<number>(0);
+  const [presentedPubs,setpresentedPubs] = useState<number>(0);
   const [publishPubs,setPublishPubs] = useState<number>(0);
+  const [filterStartDate, setFilterStartDate] = useState<string>('2023-01-01');
+  const [filterEndDate,setfilterEndDate] = useState<string>(`${new Date().toISOString().slice(0, -14)}`);
   const [chartData, setChartData] = useState<ChartDataInf>({
     labels:[],
     datasets: [],
@@ -86,25 +88,31 @@ export default function Home() {
     responsive: true
   });
 
-    useEffect(() => {
-        const fetchPubs = async () => {
-            try {
-                const currentTimestamp: string = new Date().toISOString().slice(0, -5) + 'Z';
-                const response = await axios.get(`http://127.0.0.1:5000/publications?starttime=2023-01-01T00:00:00Z&endtime=${currentTimestamp}`,{
+  const handleDateFilter = async () => {
+    try {
+      console.log("start "+filterStartDate);
+      console.log("end "+filterEndDate);
+      const response = await axios.get(`http://127.0.0.1:5000/publications?starttime=${filterStartDate}&endtime=${filterEndDate}`,{
                     headers:{'Content-type':'application/json'}
                 });
                 if(!response.data.status){
                     console.log("Unable fetching publications");
                 }
+
+
+                const fetchedData = await response.data;
+                console.log(fetchedData);
+
+
                 const data: Publication[] = await response.data;
                 let acceptedCount = 0;
-                let pendingCount = 0;
+                let presentedCount = 0;
                 let publishedcount = 0;
                 data.forEach((publication) => {
                   if (publication.Status === "Accepted") {
                     acceptedCount++;
-                  } else if (publication.Status === "Pending") {
-                    pendingCount++;
+                  } else if (publication.Status === "Presented") {
+                    presentedCount++;
                   } else if (publication.Status === "Published") {
                     publishedcount++;
                   }
@@ -114,15 +122,81 @@ export default function Home() {
                 setPubs(data);
                 setAcceptPubs(acceptedCount);
                 setPublishPubs(publishedcount);
-                setPendPubs(pendingCount);
+                setpresentedPubs(presentedCount);
                 settotalPubs(pub_tot);
                 
                 setChartData({
-                  labels: ['Published', 'Accepted', 'Pending'],
+                  labels: ['Published', 'Accepted', 'Presented'],
                   datasets: [
                       {
                           label: 'Publication Status',
-                          data: [publishedcount, acceptedCount, pendingCount],
+                          data: [publishedcount, acceptedCount, presentedCount],
+                          
+                          backgroundColor: ['#11b765', '#f8821e', '#ef4437'],
+                        }, 
+                  ]
+              })
+              setChartOptions({
+                  plugins: {
+                      legend: {
+                          position: 'top',
+                      },
+                      title: {
+                          display: true,
+                          text: 'Publication Status'
+                      }
+                  },
+                  maintainAspectRatio: false,
+                  responsive: true
+              })
+    } catch (error) {
+      console.error("Error fetching date filtered data:", error);
+    }
+  }
+
+    useEffect(() => {
+        const fetchPubs = async () => {
+            try {
+                const currentTimestamp: string = await new Date().toISOString().slice(0, -14);
+                const response = await axios.get(`http://127.0.0.1:5000/publications?starttime=${filterStartDate}&endtime=${currentTimestamp}`,{
+                    headers:{'Content-type':'application/json'}
+                });
+                if(!response.data.status){
+                    console.log("Unable fetching publications");
+                }
+
+
+                const fetchedData = await response.data;
+                console.log(fetchedData);
+
+
+                const data: Publication[] = await response.data;
+                let acceptedCount = 0;
+                let presentedCount = 0;
+                let publishedcount = 0;
+                data.forEach((publication) => {
+                  if (publication.Status === "Accepted") {
+                    acceptedCount++;
+                  } else if (publication.Status === "Presented") {
+                    presentedCount++;
+                  } else if (publication.Status === "Published") {
+                    publishedcount++;
+                  }
+                });
+
+                const pub_tot = data.length;
+                setPubs(data);
+                setAcceptPubs(acceptedCount);
+                setPublishPubs(publishedcount);
+                setpresentedPubs(presentedCount);
+                settotalPubs(pub_tot);
+                
+                setChartData({
+                  labels: ['Published', 'Accepted', 'Presented'],
+                  datasets: [
+                      {
+                          label: 'Publication Status',
+                          data: [publishedcount, acceptedCount, presentedCount],
                           
                           backgroundColor: ['#11b765', '#f8821e', '#ef4437'],
                         }, 
@@ -148,8 +222,9 @@ export default function Home() {
         }
         fetchPubs();
     },[])
+
   return (
-    <main className="bg-[#d5e7eb] h-max w-screen flex justify-end overflow-hidden overflow-y-auto">
+    <main className="bg-[#d5e7eb] h-max w-screen flex justify-end overflow-y-auto">
       <div className="h-max bg-white m-3 w-screen md:w-[79%] rounded-2xl p-7 flex flex-col shadow">
         <div className='flex justify-between flex-row w-[100%]'>
           <div className='flex justify-start flex-col pt-8'>
@@ -164,15 +239,58 @@ export default function Home() {
               </div>
               <div className='bg-[#e9eaed] w-[2px] h-[85%]'></div>
               <div>
-              {pendPubs!=0 ? <div className="text-black text-4xl mb-2">{pendPubs}</div> : <div className='px-2 py-4 bg-slate-300 animate-pulse rounded-lg'></div>}
-                <div className="text-[#6c717e]">Pending</div>
+              {presentedPubs!=0 ? <div className="text-black text-4xl mb-2">{presentedPubs}</div> : <div className='text-black text-4xl mb-2'>0</div>}
+                <div className="text-[#6c717e]">Presented</div>
               </div>
             </div>
           </div>
         </div>
         <hr className="flex justify-center border-t-2 border-gray-200 mt-5 mb-2"/>
 
-        <div className='overflow-auto rounded-lg shadow hidden md:block mb-5'>
+        <div className='flex justify-between mt-9 mb-4'>
+          <div className='flex justify-start'>
+            <div>
+              <input 
+                className='text-gray-900 border-2 border-gray-100 focus:outline-none focus:border-gray-400 p-2 rounded-xl shadow-md hover:cursor-pointer text-[0.7rem] lg:text-[1rem] mr-2 lg:mr-0'
+                required
+                type='date'
+                id='startdate'
+                placeholder='Start Date'
+                value={filterStartDate}
+                onChange={(e) => setFilterStartDate(e.target.value)}
+              />
+            </div>
+            <div className='text-gray-400 ml-4 mr-4 flex justify-center text-center hidden lg:block'>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-12">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+              </svg>
+            </div>
+            <div>
+              <input 
+                className='text-gray-900 border-2 border-gray-100 focus:outline-none focus:border-gray-400 p-2 rounded-xl shadow-md hover:cursor-pointer  text-[0.7rem] lg:text-[1rem]'
+                required
+                type='date'
+                id='startdate'
+                placeholder='Start Date'
+                value={filterEndDate}
+                onChange={(e) => setfilterEndDate(e.target.value)}
+              />
+            </div>
+            <div className='text-gray-500 border-gray-100 border-2 rounded-xl p-2 ml-2 hover:border-gray-400 hover:cursor-pointer shadow-md  text-[0.7rem] lg:text-[1rem]' onClick={() => handleDateFilter()}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+            </div>
+          </div>
+          <div className='text-gray-500 border-gray-100 border-2 rounded-xl p-2 ml-2 hover:border-gray-400 hover:cursor-pointer shadow-md  text-[0.7rem] lg:text-[1rem]'>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+            </svg>
+          </div>
+        </div>
+        
+
+        <div className='overflow-auto rounded-lg shadow-lg hidden md:block mb-5'>
           <table className='w-full text-black'>
             <thead className='bg-gray-50 border-b-2 border-gray-200'>
               <tr>
@@ -245,7 +363,7 @@ export default function Home() {
         </div>
 
 
-        <div className='w-full md:col-span-2 h-[50vh] mb-2 md:m-auto p-4 border rounded-lg bg-white shadow'>
+        <div className='w-full md:col-span-2 h-[50vh] mb-2 md:m-auto p-4 border rounded-lg bg-white shadow-lg'>
           {pub.length!=0 ? <Doughnut data={chartData} options={chartOptions} /> : <div className='px-2 py-4 my-1 bg-slate-300 animate-pulse rounded-lg w-[100%] h-[100%]'></div>}
         </div>
 
@@ -256,7 +374,14 @@ export default function Home() {
                 <div className='text-blue-500 font-bold text-[0.8rem] lg:text-sm'>{publication.FacultyName}</div>
                 <div className='text-gray-500 hidden'>{` ${publication.StartDate} -  ${publication.EndDate} `}</div>
                 <div>
-                    <span className='p-1.5 text-[0.6rem] lg:text-sm font-medium uppercase rounded-lg tracking-wider text-blue-800 bg-blue-200'>{publication.Status}</span>
+                      {publication.Status=="Published" ? (
+                          <span className='p-1.5 text-[0.6rem] lg:text-sm font-medium uppercase rounded-lg tracking-wider text-blue-800 bg-yellow-200'>{publication.Status}</span>
+                        ) : publication.Status == "Accepted" ? (
+                          <span className='p-1.5 text-[0.6rem] lg:text-sm font-medium uppercase rounded-lg tracking-wider text-blue-800 bg-orange-200'>{publication.Status}</span>
+                        ) : (
+                          <span className='p-1.5 text-[0.6rem] lg:text-sm font-medium uppercase rounded-lg tracking-wider text-blue-800 bg-blue-200'>{publication.Status}</span>
+                        )
+                      }
                 </div>
               </div>
               <div className='text-sm text-gray-700'>{publication.Title}</div>

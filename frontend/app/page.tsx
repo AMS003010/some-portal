@@ -12,11 +12,12 @@ interface MainProps {
 }
 
 export default function Main() {
-  const elementList = [<Home key="0"/>, <AddPublication key="1"/>];
-  const [index,setIndex] = useState(1);
+  const [index,setIndex] = useState(0);
+  const elementList = [<Home key="0"/>, <AddPublication key="1" />];
+  
 
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <SidePanel index={index} setIndex={setIndex}/>
       {elementList[index]}
     </div>
