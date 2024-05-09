@@ -209,7 +209,7 @@ try{
     return(
       <>
        <ToastContainer/>
-        <div className="bg-[#d5e7eb] h-dvh w-screen flex justify-end overflow-x-hidden overflow-y-auto">
+        <div className="bg-[#d5e7eb] h-max w-screen flex justify-end overflow-x-hidden overflow-y-auto">
             <div className="h-max bg-white m-3 w-screen md:w-[79%] rounded-2xl p-7 flex flex-col shadow">
                 <h1 className={`${roboto.className} text-black text-4xl lg:text-4xl mt-7`}>Add a Publication</h1>
                 <hr className="flex justify-center border-t-2 border-gray-200 mt-7 mb-10"/>
@@ -365,7 +365,7 @@ Publication Status
       />               
                         </div>
                     
-                        <div className='relative w-full flex-row items-center w-full justify-center md:w-1/2 mx-auto mb-10'>
+                        <div className='relative flex-row items-center w-full justify-center md:w-1/2 mx-auto mb-10'>
                             <h1 className='text-gray-700 text-lg text-center'>Capstone Project?</h1>
                             <span className='flex flex-row justify-center mt-4'>
                             <input 
@@ -412,7 +412,7 @@ Publication Status
                             <label className='absolute left-0 -top-3.5 text-indigo-700 text-sm font-semibold transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:font-normal peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-indigo-700 peer-focus:font-semibold peer-focus:text-sm'>Scopus Indexation (Optional)</label>
                         </div>
                     </div>
-                    <div className='relative w-full flex justify-end px-4 mt-8'>
+                    <div className='relative w-full flex justify-end px-4 mt-20 lg:mt-8'>
                          <button className='bg-gradient-to-r from-[#170a7f] to-[#12075c] text-white font-semibold hover:scale-105 hover:shadow-[0_0_60px_-5px_(0,0,0,1)] hover:shadow-yellow-400 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:text-yellow-400 rounded px-4 py-4' type="submit">Add Publication</button>
                          <button className='ml-6 bg-gradient-to-r from-red-700 to-red-800 text-white font-semibold hover:scale-105 hover:shadow-[0_0_60px_-5px_(0,0,0,1)] hover:shadow-yellow-400 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:text-yellow-400 rounded px-6 py-4' onClick={handleClearAll}>Clear All</button>
                     </div>

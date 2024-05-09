@@ -19,7 +19,7 @@ export default function RootLayout({children}:RootLayoutProps){
   return (
     <html lang="en">
       <head>
-        <meta name="keywords" content="PES EC Publication, Teachers Publiaction"/>
+        <meta name="keywords" content="PES EC Publication, Teachers Publication"/>
       </head>
       <body>
           {children}
