@@ -1,12 +1,21 @@
-FROM golang:1.22-alpine3.19
+FROM golang:1.22-alpine3.19 AS build
 
 WORKDIR /app
 
+COPY go.mod go.sum ./
+
+RUN go mod download 
+
 COPY . .
 
-RUN go get 
+RUN go build -o main .
 
-RUN go mod tidy
+FROM alpine:latest
 
-EXPOSE 5000
-CMD [ "go", "run", "main.go" ]
+WORKDIR /app
+
+COPY --from=build /app/main .
+COPY --from=build /app/servicetoken.json .
+
+CMD ["./main"]
+
