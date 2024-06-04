@@ -62,6 +62,12 @@ export default function SidePanel({index,setIndex}: SidePanelProps) {
                             </svg>
                             <span className={`${nunito.className} text-lg ml-2`}>Add a Publication</span>
                         </div>
+                        <div className='flex justify-start items-center my-1 hover:bg-[#21205e] rounded-lg py-4 text-[#FFF] hover:text-white pl-3 cursor-pointer'>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                            </svg>
+                            <span className={`${nunito.className} text-lg ml-2`}>Compare</span>
+                        </div>
                         <div className='flex justify-start items-center my-1 hover:bg-[#21205e] rounded-lg py-4 text-[#FFF] hover:text-white pl-3 cursor-pointer absolute bottom-2 w-[94%]'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-7 h-7">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
