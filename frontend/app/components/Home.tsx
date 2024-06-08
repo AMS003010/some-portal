@@ -1,6 +1,5 @@
 "use client"
-import { Roboto } from 'next/font/google'
-import { resolve } from 'path';
+import { Roboto } from 'next/font/google';
 import axios from 'axios';
 import { useEffect,useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
@@ -65,7 +64,6 @@ export default function Home() {
 
   const [pub,setPubs] = useState<Publication[]>([]);
   const [totalPubs,settotalPubs] = useState<number>(0);
-  const [acceptPubs,setAcceptPubs] = useState<number>(0);
   const [presentedPubs,setpresentedPubs] = useState<number>(0);
   const [publishPubs,setPublishPubs] = useState<number>(0);
   const [filterStartDate, setFilterStartDate] = useState<string>('2023-01-01');
@@ -81,7 +79,7 @@ export default function Home() {
       },
       title: {
         display: true,
-        text: 'Daily Revenue'
+        text: 'Publication Status'
       }
     },
     maintainAspectRatio: false,
@@ -105,13 +103,10 @@ export default function Home() {
 
 
                 const data: Publication[] = await response.data;
-                let acceptedCount = 0;
                 let presentedCount = 0;
                 let publishedcount = 0;
                 data.forEach((publication) => {
-                  if (publication.Status === "Accepted") {
-                    acceptedCount++;
-                  } else if (publication.Status === "Presented") {
+                  if (publication.Status === "Presented") {
                     presentedCount++;
                   } else if (publication.Status === "Published") {
                     publishedcount++;
@@ -120,19 +115,18 @@ export default function Home() {
 
                 const pub_tot = data.length;
                 setPubs(data);
-                setAcceptPubs(acceptedCount);
                 setPublishPubs(publishedcount);
                 setpresentedPubs(presentedCount);
                 settotalPubs(pub_tot);
                 
                 setChartData({
-                  labels: ['Published', 'Accepted', 'Presented'],
+                  labels: ['Published', 'Presented'],
                   datasets: [
                       {
                           label: 'Publication Status',
-                          data: [publishedcount, acceptedCount, presentedCount],
+                          data: [publishedcount, presentedCount],
                           
-                          backgroundColor: ['#11b765', '#f8821e', '#ef4437'],
+                          backgroundColor: ['#f8821e', '#ef4437'],
                         }, 
                   ]
               })
@@ -171,13 +165,10 @@ export default function Home() {
 
 
                 const data: Publication[] = await response.data;
-                let acceptedCount = 0;
                 let presentedCount = 0;
                 let publishedcount = 0;
                 data.forEach((publication) => {
-                  if (publication.Status === "Accepted") {
-                    acceptedCount++;
-                  } else if (publication.Status === "Presented") {
+                  if (publication.Status === "Presented") {
                     presentedCount++;
                   } else if (publication.Status === "Published") {
                     publishedcount++;
@@ -186,19 +177,18 @@ export default function Home() {
 
                 const pub_tot = data.length;
                 setPubs(data);
-                setAcceptPubs(acceptedCount);
                 setPublishPubs(publishedcount);
                 setpresentedPubs(presentedCount);
                 settotalPubs(pub_tot);
                 
                 setChartData({
-                  labels: ['Published', 'Accepted', 'Presented'],
+                  labels: ['Published', 'Presented'],
                   datasets: [
                       {
                           label: 'Publication Status',
-                          data: [publishedcount, acceptedCount, presentedCount],
+                          data: [publishedcount, presentedCount],
                           
-                          backgroundColor: ['#11b765', '#f8821e', '#ef4437'],
+                          backgroundColor: ['#f8821e', '#ef4437'],
                         }, 
                   ]
               })

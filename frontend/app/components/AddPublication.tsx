@@ -224,8 +224,8 @@ try{
                                 placeholder='Faculty Name'
                                 required
                                 value={faculty}
-        onChange={(e) => {setFaculty(e.target.value)}}
-        onBlur={handleFacultyBlur}
+                                onChange={(e) => {setFaculty(e.target.value)}}
+                                onBlur={handleFacultyBlur}
                             />
                             <label className='absolute left-0 -top-3.5 text-indigo-700 text-sm font-semibold transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:font-normal peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-indigo-700 peer-focus:font-semibold peer-focus:text-sm'>Faculty Name</label>
                         </div>
@@ -257,80 +257,78 @@ try{
                         </div>
                     <div className='flex justify-between gap-5 mb-10'>
                        
-                         <div className='relative w-full'>
+                        <div className='relative w-full'>
                            <Creatable
-                           className='text-blue-700 '
-                           closeMenuOnSelect={false}
-                          
-                           isClearable
-                           required
-      components={animatedComponents}
-        defaultValue={selectedTypes}
-        onChange={setSelectedTypes}
-        isSearchable
-        placeholder = {
-            <p className='text-gray-500'>
-Publication Type
-            </p>
-        }
-        options={[
-    { value: "Conference", label: "Conference" },
-    { value: "Journal", label: "Journal" },
-    { value: "Book Chapter", label: "Book Chapter" },
-  ]}
-        isMulti
-      />
+                                className='text-blue-700 '
+                                closeMenuOnSelect={false}
+                                isClearable
+                                required
+                                components={animatedComponents}
+                                defaultValue={selectedTypes}
+                                onChange={setSelectedTypes}
+                                isSearchable
+                                placeholder = {
+                                    <p className='text-gray-500'>
+                                        Publication Type
+                                    </p>
+                                }
+                                options={[
+                                    { value: "Conference", label: "Conference" },
+                                    { value: "Journal", label: "Journal" },
+                                    { value: "Book Chapter", label: "Book Chapter" },
+                                ]}
+                                isMulti
+                            />
                         </div>
                         <div className='relative w-full'>
                             <Creatable
-                           className='text-blue-700'
-                           
-                           isClearable
-                           isSearchable
-                           required
-      components={animatedComponents}
-        defaultValue={selectedPubStatus}
-        onChange={setSelectedPubStatus}
-         placeholder = {
-            <p className='text-gray-500'>
-Publication Status
-            </p>
-        }
-        options={[
-    { value: "Published", label: "Published" },
-    { value: "Accepted", label: "Accepted" },
-    { value: "Presented", label: "Presented" },
-  ]}
-      />
-                        </div>
-                    </div>
-                     <div className='relative w-full flex flex-col items-center justify-center mb-10'>
-                     <h1 className='text-gray-700 text-lg'>Publication / Conference Dates</h1>
-                     <span className='flex flex-row items-center space-x-8 justify-center mt-2 md:mt-4'>
-                        <div className='flex flex-col'>
-                           <label htmlFor='startdate' className='text-indigo-800 mb-1 text-center font-semibold'>Start Date</label> 
-                             <input 
-                             className='text-gray-900 border-2 border-gray-300 focus:outline-none focus:border-blue-400 p-1'
+                                className='text-blue-700'  
+                                isClearable
+                                isSearchable
                                 required
-                                type='date'
-                                id='startdate'
-                                placeholder='Start Date'
-                                value={pubStartDate}
-                                onChange={(e) => setPubStartDate(e.target.value)}
+                                components={animatedComponents}
+                                defaultValue={selectedPubStatus}
+                                onChange={setSelectedPubStatus}
+                                placeholder = {
+                                    <p className='text-gray-500'>
+                                        Publication Status
+                                    </p>
+                                }
+                                options={[
+                                    { value: "Published", label: "Published" },
+                                    { value: "Accepted", label: "Accepted" },
+                                    { value: "Presented", label: "Presented" },
+                                ]}
                             />
                         </div>
-                          <div className='flex flex-col'>
-                            <label htmlFor='enddate' className='mb-1 font-semibold text-center text-indigo-800'>End Date</label>
-                              <input 
-                               className='text-gray-900 border-2 border-gray-300 p-1 focus:outline-none focus:border-blue-400'
-                                type='date'
-                                id="enddate"
-                                value={pubEndDate}
-                                onChange={(e) => setPubEndDate(e.target.value)}
-                            /></div> 
-                            
-                          </span>  
-                        </div>
+                    </div>
+                    <div className='relative w-full flex flex-col items-center justify-center mb-10'>
+                        <h1 className='text-gray-700 text-lg'>Publication / Conference Dates</h1>
+                        <span className='flex flex-row items-center space-x-8 justify-center mt-2 md:mt-4'>
+                            <div className='flex flex-col'>
+                            <label htmlFor='startdate' className='text-indigo-800 mb-1 text-center font-semibold'>Start Date</label> 
+                                <input 
+                                    className='text-gray-900 border-2 border-gray-300 focus:outline-none focus:border-blue-400 p-1'
+                                    required
+                                    type='date'
+                                    id='startdate'
+                                    placeholder='Start Date'
+                                    value={pubStartDate}
+                                    onChange={(e) => setPubStartDate(e.target.value)}
+                                />
+                            </div>
+                            <div className='flex flex-col'>
+                                <label htmlFor='enddate' className='mb-1 font-semibold text-center text-indigo-800'>End Date</label>
+                                <input 
+                                    className='text-gray-900 border-2 border-gray-300 p-1 focus:outline-none focus:border-blue-400'
+                                    type='date'
+                                    id="enddate"
+                                    value={pubEndDate}
+                                    onChange={(e) => setPubEndDate(e.target.value)}
+                                />
+                            </div>     
+                        </span>  
+                    </div>
                     <div className='mb-7 w-full relative'>
                       
                         
@@ -340,43 +338,42 @@ Publication Status
                                 placeholder='Author Names'
                             /> */}
 
-                             <TagsInput
-                             
-        value={authorNames}
-        onChange={(e) => {handleAuthorNamesChange(e)}}
-        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {handleAuthorNamesBlur(e)}}
-        placeHolder='Authors (Comma Separated)'
-        classNames={{
-            input: "text-gray-900",
-            tag: "bg-gray-300 text-blue-600"
-        }}
-      />               
-                        </div>
-                      <div className='relative w-full mb-7'>
-                            <TagsInput
-        value={publicationLinks}
-        onChange={(e) => {handlePublicationLinksChange(e)}}
-        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {handlePublicationLinksBlur(e)}}
-        placeHolder='Publication Links (Optional) (Comma separated)'
-        classNames={{
-            input: "text-gray-900",
-            tag: "bg-gray-300 text-blue-600"
-        }}
-      />               
-                        </div>
-                    
-                        <div className='relative flex-row items-center w-full justify-center md:w-1/2 mx-auto mb-10'>
-                            <h1 className='text-gray-700 text-lg text-center'>Capstone Project?</h1>
-                            <span className='flex flex-row justify-center mt-4'>
+                        <TagsInput
+                            value={authorNames}
+                            onChange={(e) => {handleAuthorNamesChange(e)}}
+                            onBlur={(e: React.FocusEvent<HTMLInputElement>) => {handleAuthorNamesBlur(e)}}
+                            placeHolder='Authors (Comma Separated)'
+                            classNames={{
+                                input: "text-gray-900",
+                                tag: "bg-gray-300 text-blue-600"
+                            }}
+                        />               
+                    </div>
+                    <div className='relative w-full mb-7'>
+                        <TagsInput
+                            value={publicationLinks}
+                            onChange={(e) => {handlePublicationLinksChange(e)}}
+                            onBlur={(e: React.FocusEvent<HTMLInputElement>) => {handlePublicationLinksBlur(e)}}
+                            placeHolder='Publication Links (Optional) (Comma separated)'
+                            classNames={{
+                                input: "text-gray-900",
+                                tag: "bg-gray-300 text-blue-600"
+                            }}
+                        />               
+                    </div>
+                    <div className='relative flex-row items-center w-full justify-center md:w-1/2 mx-auto mb-10'>
+                        <h1 className='text-gray-700 text-lg text-center'>Capstone Project?</h1>
+                        <span className='flex flex-row justify-center mt-4'>
                             <input 
-                            className='inline-block text-center mr-1'
+                                className='inline-block text-center mr-1'
                                 type='radio'
                                 name="capstone"
                                 value={1}
                                 id="yes"
                                 checked={isCapstone== 1}
                                 onChange={(e) => {setIsCapstone(parseInt(e.target.value))}}
-                            /><label htmlFor='yes' className='text-gray-900'>Yes</label>
+                            />
+                            <label htmlFor='yes' className='text-gray-900'>Yes</label>
                             <input 
                                 type='radio'
                                 className='inline-block ml-4 text-center mr-1'
@@ -385,12 +382,13 @@ Publication Status
                                 id="no"
                                 checked={isCapstone== 0}
                                 onChange={(e) => {setIsCapstone(parseInt(e.target.value))}}
-                            /><label htmlFor="no" className='text-gray-900 text-center flex items-center'>No</label>
-                            </span>
-                        </div>
+                            />
+                            <label htmlFor="no" className='text-gray-900 text-center flex items-center'>No</label>
+                        </span>
+                    </div>
                       
                     
-                    <div className='flex justify-between gap-5 mb-7'>
+                    <div className='flex justify-between gap-5 mb-32'>
                         <div className='relative w-full'>
                             <input 
                                 className='peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-blue-500' 
@@ -402,14 +400,28 @@ Publication Status
                             <label className='absolute left-0 -top-3.5 text-indigo-700 text-sm font-semibold transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:font-normal peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-indigo-700 peer-focus:font-semibold peer-focus:text-sm'>Impact Factor (Optional)</label>
                         </div>
                         <div className='relative w-full'>
-                            <input 
-                                className='peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-blue-500' 
-                                type='text'
-                                placeholder='Scopus Indexation'
-                                value={scopus}
-                                onChange={(e) => {setScopus(e.target.value)}}
+                            <Creatable
+                                className='text-blue-700'  
+                                isClearable
+                                isSearchable
+                                required
+                                components={animatedComponents}
+                                defaultValue={selectedPubStatus}
+                                onChange={setSelectedPubStatus}
+                                placeholder = {
+                                    <p className='text-gray-500'>
+                                        Indexation
+                                    </p>
+                                }
+                                options={[
+                                { value: "Q1", label: "Q1" },
+                                { value: "Q2", label: "Q2" },
+                                { value: "Q3", label: "Q3" },
+                                { value: "Q4", label: "Q4" },
+                                { value: "WOS", label: "WOS" },
+                                { value: "SCI", label: "SCI" },
+                        ]}
                             />
-                            <label className='absolute left-0 -top-3.5 text-indigo-700 text-sm font-semibold transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:font-normal peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-indigo-700 peer-focus:font-semibold peer-focus:text-sm'>Scopus Indexation (Optional)</label>
                         </div>
                     </div>
                     <div className='relative w-full flex justify-end px-4 mt-20 lg:mt-8'>
