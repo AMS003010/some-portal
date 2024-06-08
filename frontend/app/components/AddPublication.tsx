@@ -104,17 +104,26 @@ const handleAuthorNamesBlur = (e: React.FocusEvent<HTMLInputElement>) => {
                 newLinks.push(trimmedLink);
             }
         });
+        
         return newLinks;
     });
        
    }
+
+   /* useEffect(() => {
+    console.log(publicationLinks)
+    console.log(authorNames)
+   },[publicationLinks,authorNames]) */
 
 
 
   const [isCapstone, setIsCapstone] = useState(1)
 
   const [impactFactor, setImpactFactor] = useState("")
-  const [scopus, setScopus] = useState("")
+  const [indexation, setIndexation] = useState<SingleValue<{
+    value: string;
+    label: String;
+  }> | null>(null);
 
   const animatedComponents = makeAnimated();
 
@@ -130,12 +139,27 @@ const handleAuthorNamesBlur = (e: React.FocusEvent<HTMLInputElement>) => {
 
    const Types = selectedTypes?.map(item => item.value);
    if(!Types){
-alert("Please select a publication type.")
+alert("All fields are mandatory! Please select a publication type.")
 return
    }
 
     if(!selectedPubStatus){
-alert("Please select a publication status.")
+alert("All fields are mandatory! Please select a publication status.")
+return
+   }
+
+   if(authorNames.length == 0){
+alert("All fields are mandatory! Please fill in author names.")
+return
+   }
+
+    if(publicationLinks.length == 0){
+alert("All fields are mandatory! Please add certificate / publication links.")
+return
+   }
+
+   if(!indexation){
+alert("All fields are mandatory! Please add indexation.")
 return
    }
 
@@ -161,7 +185,7 @@ return
         IsCapstone: isCapstone,
         Links: publicationLinks,
         ImpactFactor: impactFactor,
-        ScopusIndexation: scopus
+        ScopusIndexation: indexation.value
     }
 
     
@@ -296,7 +320,7 @@ try{
                                 }
                                 options={[
                                     { value: "Published", label: "Published" },
-                                    { value: "Accepted", label: "Accepted" },
+                                    
                                     { value: "Presented", label: "Presented" },
                                 ]}
                             />
@@ -318,7 +342,7 @@ try{
                                 />
                             </div>
                             <div className='flex flex-col'>
-                                <label htmlFor='enddate' className='mb-1 font-semibold text-center text-indigo-800'>End Date</label>
+                                <label htmlFor='enddate' className='mb-1 font-semibold text-center text-indigo-800'>End Date (Optional)</label>
                                 <input 
                                     className='text-gray-900 border-2 border-gray-300 p-1 focus:outline-none focus:border-blue-400'
                                     type='date'
@@ -343,6 +367,7 @@ try{
                             onChange={(e) => {handleAuthorNamesChange(e)}}
                             onBlur={(e: React.FocusEvent<HTMLInputElement>) => {handleAuthorNamesBlur(e)}}
                             placeHolder='Authors (Comma Separated)'
+                            
                             classNames={{
                                 input: "text-gray-900",
                                 tag: "bg-gray-300 text-blue-600"
@@ -354,7 +379,7 @@ try{
                             value={publicationLinks}
                             onChange={(e) => {handlePublicationLinksChange(e)}}
                             onBlur={(e: React.FocusEvent<HTMLInputElement>) => {handlePublicationLinksBlur(e)}}
-                            placeHolder='Publication Links (Optional) (Comma separated)'
+                            placeHolder='Certificate / Publication Links (Comma separated)'
                             classNames={{
                                 input: "text-gray-900",
                                 tag: "bg-gray-300 text-blue-600"
@@ -406,8 +431,8 @@ try{
                                 isSearchable
                                 required
                                 components={animatedComponents}
-                                defaultValue={selectedPubStatus}
-                                onChange={setSelectedPubStatus}
+                                defaultValue={indexation}
+                                onChange={setIndexation}
                                 placeholder = {
                                     <p className='text-gray-500'>
                                         Indexation
@@ -425,8 +450,8 @@ try{
                         </div>
                     </div>
                     <div className='relative w-full flex justify-end px-4 mt-20 lg:mt-8'>
-                         <button className='bg-gradient-to-r from-[#170a7f] to-[#12075c] text-white font-semibold hover:scale-105 hover:shadow-[0_0_60px_-5px_(0,0,0,1)] hover:shadow-yellow-400 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:text-yellow-400 rounded px-4 py-4' type="submit">Add Publication</button>
-                         <button className='ml-6 bg-gradient-to-r from-red-700 to-red-800 text-white font-semibold hover:scale-105 hover:shadow-[0_0_60px_-5px_(0,0,0,1)] hover:shadow-yellow-400 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:text-yellow-400 rounded px-6 py-4' onClick={handleClearAll}>Clear All</button>
+                         <button className='bg-gradient-to-r from-[#170a7f] to-[#12075c] text-white font-semibold hover:scale-105 hover:shadow-[0_0_40px_-10px_(0,0,0,1)] hover:shadow-yellow-400 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:text-yellow-400 rounded px-4 py-4' type="submit">Add Publication</button>
+                         <button className='ml-6 bg-gradient-to-r from-red-700 to-red-800 text-white font-semibold hover:scale-105 hover:shadow-[0_0_40px_-10px_(0,0,0,1)] hover:shadow-yellow-400 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:text-yellow-400 rounded px-6 py-4' onClick={handleClearAll}>Clear All</button>
                     </div>
                 </form>
             </div>
