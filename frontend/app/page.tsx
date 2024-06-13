@@ -3,6 +3,7 @@
 import AddPublication from "./components/AddPublication";
 import Home from "./components/Home";
 import SidePanel from "./components/SidePanel";
+import CompareSection from "./components/CompareSection";
 
 import { useState } from "react";
 
@@ -13,7 +14,7 @@ interface MainProps {
 
 export default function Main() {
   const [index,setIndex] = useState(0);
-  const elementList = [<Home key="0"/>, <AddPublication key="1" />];
+  const elementList = [<Home key="0"/>, <AddPublication key="1" />, <CompareSection key="2" />];
   
 
   return (
