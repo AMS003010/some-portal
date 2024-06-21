@@ -315,18 +315,19 @@ export default function Home() {
                       }
                     </td>
                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{ publication.StartDate == publication.EndDate ? ` ${new Date(publication.StartDate).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    })}` : ` ${new Date(publication.StartDate).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    })} -  ${new Date(publication.EndDate).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    })} `}</td>
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                      })}` : ` ${new Date(publication.StartDate).toLocaleDateString(undefined, {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                      })} -  ${new Date(publication.EndDate).toLocaleDateString(undefined, {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                      })} `}
+                    </td>
                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{publication.Types.join(",")}</td>
                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{publication.IsCapstone ? "Yes" : "No"}</td>
                   </tr>
