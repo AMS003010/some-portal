@@ -259,9 +259,39 @@ export default function CompareSection () {
                             <div className='text-black text-4xl'>{books2}</div>
                         </div>
                     </div>
-                    <div className='w-full md:col-span-2 h-[50vh] mb-2 md:m-auto p-4 rounded-lg bg-white shadow-lg'>
+
+
+                    <div className='overflow-auto rounded-lg shadow-lg hidden md:block mb-5 mt-8'>
+                        <table className='w-full text-black'>
+                            <thead className='bg-gray-100 border-b-2 border-gray-200'>
+                            <tr>
+                                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Time periods</th>
+                                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Conferences</th>
+                                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Journals</th>
+                                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Book Chapters</th>
+                            </tr>
+                            </thead>
+                            <tbody className='divide-y divide-gray-100'>
+                                <tr>
+                                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Time period 1</td>
+                                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{conferences1}</td>
+                                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{journals1}</td>
+                                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{books1}</td>
+                                </tr>
+                                <tr>
+                                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Time period 2</td>
+                                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{conferences2}</td>
+                                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{journals2}</td>
+                                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{books2}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className='w-full md:col-span-2 h-[50vh] mb-2 md:m-auto p-4 rounded-lg bg-white shadow-md'>
                         <Bar data={chartData} options={chartOptions} />
                     </div>
+
                 </div>
             </div>
         </div>
