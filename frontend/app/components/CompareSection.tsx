@@ -1,8 +1,9 @@
 import { Roboto } from 'next/font/google';
 import { Quicksand } from 'next/font/google';
-import { useState } from 'react';
+import { useState,useRef,useCallback } from 'react';
 import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
+import { DownloadTableExcel } from 'react-export-table-to-excel';
 
 import {
     Chart as ChartJS,
@@ -88,10 +89,21 @@ export default function CompareSection () {
         maintainAspectRatio: false,
         responsive: true
     });
+    let ref = useRef<ChartJS<'bar'>>(null);
+    let tableRef = useRef(null);
+
+    const handleDownloadGraph = useCallback(() => {
+        if (ref.current) {
+            const link = document.createElement("a");
+            link.download = "chart.png";
+            link.href = ref.current.toBase64Image();
+            link.click();
+        }
+    }, [])
 
     const handleDateFilter = async () => {
         try {
-            const response1 = await axios.get(`http://127.0.0.1:5000/publications?starttime=${filterStartDate1}&endtime=${filterEndDate1}`, {
+            const response1 = await axios.get(`http://127.0.0.1:5000/publications-together?starttime=${filterStartDate1}&endtime=${filterEndDate1}`, {
                 headers: { 'Content-type': 'application/json' }
             });
             console.log({ "data1": await response1.data });
@@ -102,7 +114,7 @@ export default function CompareSection () {
                 return;
             }
     
-            const response2 = await axios.get(`http://127.0.0.1:5000/publications?starttime=${filterStartDate2}&endtime=${filterEndDate2}`, {
+            const response2 = await axios.get(`http://127.0.0.1:5000/publications-together?starttime=${filterStartDate2}&endtime=${filterEndDate2}`, {
                 headers: { 'Content-type': 'application/json' }
             });
             console.log({ "data2": await response2.data });
@@ -174,17 +186,17 @@ export default function CompareSection () {
 
     return(
         <div className="bg-[#d5e7eb] h-max w-screen flex justify-end overflow-y-auto">
-            <div className="h-max bg-white m-3 w-screen md:w-[79%] rounded-2xl p-7 flex flex-col shadow">
-                <h1 className={`${roboto.className} text-black text-4xl lg:text-4xl mt-7`}>Compare dashboard</h1>
+            <div className="h-max bg-white m-3 w-[94%] md:w-[79%] rounded-2xl p-7 flex flex-col shadow">
+                <h1 className={`${roboto.className} text-black text-3xl md:text-4xl lg:text-4xl mt-16 md:mt-7`}>Compare Dashboard</h1>
                 <hr className="flex justify-center border-t-2 border-gray-200 mt-7 mb-10"/>
-                <div className='bg-gray-50 shadow-lg rounded-2xl w-[100%] p-8'>
+                <div className='bg-gray-50 shadow-lg rounded-2xl w-[100%] p-3 md:p-8'>
                     <div className={`${roboto.className} text-black text-2xl`}>
                         Publications Overview
                     </div>
                     <div className='flex flex-row justify-between mt-5 mb-2'>
                         <div>
                             <input 
-                                className={`${quicksand.className} text-gray-500 border-2 border-gray-100 focus:outline-none focus:border-gray-400 p-2 rounded-l-xl shadow-md hover:cursor-pointer  text-[0.7rem] lg:text-[1rem]`}
+                                className={`${quicksand.className} text-gray-500 border-2 border-gray-100 focus:outline-none focus:border-gray-400 p-2 rounded-t-xl md:rounded-t-none lg:rounded-l-xl md:rounded-l-xl shadow-md hover:cursor-pointer  text-[0.7rem] lg:text-[1rem]`}
                                 required
                                 type='date'
                                 id='startdate1'
@@ -193,7 +205,7 @@ export default function CompareSection () {
                                 onChange={(e) => setFilterStartDate1(e.target.value)}
                             />
                             <input 
-                                className={`${quicksand.className} text-gray-500 border-2 border-gray-100 focus:outline-none focus:border-gray-400 p-2 rounded-r-xl shadow-md hover:cursor-pointer  text-[0.7rem] lg:text-[1rem]`}
+                                className={`${quicksand.className} text-gray-500 border-2 border-gray-100 focus:outline-none focus:border-gray-400 p-2 rounded-b-xl md:rounded-b-none lg:rounded-r-xl md:rounded-r-xl shadow-md hover:cursor-pointer  text-[0.7rem] lg:text-[1rem]`}
                                 required
                                 type='date'
                                 id='enddate1'
@@ -204,7 +216,7 @@ export default function CompareSection () {
                         </div>
                         <div>
                             <input 
-                                className={`${quicksand.className} text-gray-500 border-2 border-gray-100 focus:outline-none focus:border-gray-400 p-2 rounded-l-xl shadow-md hover:cursor-pointer  text-[0.7rem] lg:text-[1rem]`}
+                                className={`${quicksand.className} text-gray-500 border-2 border-gray-100 focus:outline-none focus:border-gray-400 p-2 rounded-t-xl md:rounded-t-none lg:rounded-l-xl md:rounded-l-xl shadow-md hover:cursor-pointer  text-[0.7rem] lg:text-[1rem]`}
                                 required
                                 type='date'
                                 id='startdate2'
@@ -213,7 +225,7 @@ export default function CompareSection () {
                                 onChange={(e) => setFilterStartDate2(e.target.value)}
                             />
                             <input 
-                                className={`${quicksand.className} text-gray-500 border-2 border-gray-100 focus:outline-none focus:border-gray-400 p-2 rounded-r-xl shadow-md hover:cursor-pointer  text-[0.7rem] lg:text-[1rem]`}
+                                className={`${quicksand.className} text-gray-500 border-2 border-gray-100 focus:outline-none focus:border-gray-400 p-2 rounded-b-xl md:rounded-b-none lg:rounded-r-xl md:rounded-r-xl shadow-md hover:cursor-pointer  text-[0.7rem] lg:text-[1rem]`}
                                 required
                                 type='date'
                                 id='enddate2'
@@ -223,15 +235,15 @@ export default function CompareSection () {
                             />
                         </div>
                     </div>
-                    <div className='flex flex-row items-center gap-2 mb-10 p-2 text-gray-500 border-gray-100 border-2 rounded-xl hover:border-gray-400 hover:cursor-pointer shadow-md w-max' onClick={() => handleDateFilter()}>
+                    <div className='flex flex-row items-center gap-2 mb-20 p-1 px-2 md:p-2 text-gray-500 border-gray-100 border-2 rounded-xl hover:border-gray-400 hover:cursor-pointer shadow-md w-max' onClick={() => handleDateFilter()}>
                         <div>Search</div>
                         <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 md:w-6 md:h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                             </svg>
                         </div>
                     </div>
-                    <div className='flex flex-row justify-between gap-3'>
+                    <div className='lg:flex flex-row justify-between gap-3 hidden'>
                         <div className='bg-[white] rounded-l-xl border-l-[0.7rem] border-l-pink-700 p-4 rounded-lg shadow-md w-[100%]'>
                             <div className='text-black'>Total Conferences</div>
                             <div className='text-black text-4xl'>{conferences1}</div>
@@ -245,7 +257,7 @@ export default function CompareSection () {
                             <div className='text-black text-4xl'>{books1}</div>
                         </div>
                     </div>
-                    <div className='flex flex-row justify-between gap-3 mt-5 mb-9'>
+                    <div className='lg:flex flex-row justify-between gap-3 mt-5 mb-24 hidden'>
                         <div className='bg-[white] rounded-l-xl border-l-[0.7rem] border-l-pink-700 p-4 rounded-lg shadow-md w-[100%]'>
                             <div className='text-black'>Total Conferences</div>
                             <div className='text-black text-4xl'>{conferences2}</div>
@@ -260,9 +272,34 @@ export default function CompareSection () {
                         </div>
                     </div>
 
-
-                    <div className='overflow-auto rounded-lg shadow-lg hidden md:block mb-5 mt-8'>
-                        <table className='w-full text-black'>
+                    <div className='flex justify-end mb-4 gap-2'>
+                        <div className='flex justify-between gap-2 p-2 px-4 text-gray-500 border-gray-100 border-2 rounded-xl hover:border-gray-400 hover:cursor-pointer shadow-md w-max' onClick={handleDownloadGraph}>
+                            <div>Download Graph</div>
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div className="p-2 px-4 text-gray-500 border-gray-100 border-2 rounded-xl hover:border-gray-400 hover:cursor-pointer shadow-md w-max">
+                            <DownloadTableExcel
+                                filename="dashboard_data"
+                                sheet="sheet 1"
+                                currentTableRef={tableRef.current}
+                            >
+                                <div className='flex justify-between gap-2'>
+                                    <button>Export Data</button>
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="m9 13.5 3 3m0 0 3-3m-3 3v-6m1.06-4.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </DownloadTableExcel>
+                        </div>
+                    </div>
+                    <div className='overflow-auto rounded-lg shadow-lg hidden md:block mb-5'>
+                        <table className='w-full text-black' ref={tableRef}>
                             <thead className='bg-gray-100 border-b-2 border-gray-200'>
                             <tr>
                                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>Time periods</th>
@@ -289,9 +326,8 @@ export default function CompareSection () {
                     </div>
 
                     <div className='w-full md:col-span-2 h-[50vh] mb-2 md:m-auto p-4 rounded-lg bg-white shadow-md'>
-                        <Bar data={chartData} options={chartOptions} />
+                        <Bar data={chartData} ref={ref} options={chartOptions} />
                     </div>
-
                 </div>
             </div>
         </div>
