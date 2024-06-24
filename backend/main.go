@@ -18,6 +18,7 @@ func main() {
 	r.Use(cors.Default())
 
 	r.GET("/publications", controllers.GetAllPublications)
+	r.GET("/publications-together", controllers.GetAllPublicationsTogether)
 	r.POST("/publication", controllers.AddPublication)
 	r.GET("/publication/:id", controllers.GetPublication)
 	r.PUT("/publication/:id", controllers.EditPublication)

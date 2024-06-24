@@ -393,3 +393,132 @@ func DeletePublication(c *gin.Context) {
 	wg.Wait()
 
 }
+
+func GetAllPublicationsTogether(c *gin.Context) {
+	startTimeStr := c.Query("starttime")
+	endTimeStr := c.Query("endtime")
+	typeFilter := c.Query("type")
+	facultyNameFilter := c.Query("facultyname")
+	statusFilter := c.Query("status")
+	isCapstoneFilter := c.Query("is_capstone")
+
+	startTime, err := time.Parse("2006-01-02", startTimeStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	endTime, err := time.Parse("2006-01-02", endTimeStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	query := ""
+	var queryParams []interface{}
+
+	if typeFilter != "" {
+		if len(query) == 0 {
+			query = "Publication Type(Journal/Conference/ Book Chapter) LIKE ?"
+		} else {
+			query += " AND Publication Type(Journal/Conference/ Book Chapter) LIKE ?"
+		}
+		queryParams = append(queryParams, "%"+typeFilter+"%")
+	}
+
+	if facultyNameFilter != "" {
+		if len(query) == 0 {
+			query = "Name of the faculties in PES University (Currently) = ?"
+		} else {
+			query += " AND Name of the faculties in PES University (Currently) = ?"
+		}
+		queryParams = append(queryParams, facultyNameFilter)
+	}
+	if statusFilter != "" {
+		if len(query) == 0 {
+			query = "STATUS=?"
+		} else {
+			query += " AND Status=?"
+		}
+		queryParams = append(queryParams, statusFilter)
+	}
+
+	if isCapstoneFilter != "" {
+		capstone := ""
+		if isCapstoneFilter == "1" {
+			capstone = "CAPSTONE"
+		} else {
+			capstone = "NON CAPSTONE"
+		}
+		if len(query) == 0 {
+			query = "Capstone/ Non Capstone = ?"
+		} else {
+			query += " AND Capstone/ Non Capstone = ?"
+		}
+		queryParams = append(queryParams, capstone)
+	}
+
+	var wg sync.WaitGroup
+	publicationChan := make(chan []models.PublicationinSheet)
+
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+		var publication []models.PublicationinSheet
+
+		err := db.Store.Select(&publication).Where(query, queryParams...).Exec(context.Background())
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		allPublications := utils.DateFilter(publication, startTime, endTime)
+		publicationChan <- allPublications
+	}()
+
+	go func() {
+		defer close(publicationChan)
+		wg.Wait()
+	}()
+
+	var publications []models.PublicationInJSON
+
+	for allPublications := range publicationChan {
+		for _, publication := range allPublications {
+			Types := strings.Split(publication.Types, ",")
+			AuthorNames := strings.Split(publication.AuthorNames, ",")
+			Links := strings.Split(publication.Links, ",")
+
+			startDate, err := time.Parse("2006-01-02", publication.StartDate)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err})
+				return
+			}
+			endDate, err := time.Parse("2006-01-02", publication.EndDate)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err})
+				return
+			}
+
+			publications = append(publications, models.PublicationInJSON{
+				ID:                      publication.ID,
+				FacultyName:             publication.FacultyName,
+				StartDate:               startDate,
+				EndDate:                 endDate,
+				Types:                   Types,
+				Title:                   publication.Title,
+				ConferenceOrJournalName: publication.ConferenceOrJournalName,
+				Status:                  publication.Status,
+				TotalAuthors:            publication.TotalAuthors,
+				AuthorNames:             AuthorNames,
+				IsCapstone:              publication.IsCapstone,
+				Links:                   Links,
+				ImpactFactor:            publication.ImpactFactor,
+				ScopusIndexation:        publication.ScopusIndexation,
+			})
+		}
+	}
+
+	c.JSON(http.StatusOK, publications)
+}
