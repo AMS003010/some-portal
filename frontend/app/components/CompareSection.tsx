@@ -103,7 +103,7 @@ export default function CompareSection () {
 
     const handleDateFilter = async () => {
         try {
-            const response1 = await axios.get(`http://127.0.0.1:5000/publications-together?starttime=${filterStartDate1}&endtime=${filterEndDate1}`, {
+            const response1 = await axios.get(`http://127.0.0.1:5000/publications?starttime=${filterStartDate1}&endtime=${filterEndDate1}`, {
                 headers: { 'Content-type': 'application/json' }
             });
             console.log({ "data1": await response1.data });
@@ -114,7 +114,7 @@ export default function CompareSection () {
                 return;
             }
     
-            const response2 = await axios.get(`http://127.0.0.1:5000/publications-together?starttime=${filterStartDate2}&endtime=${filterEndDate2}`, {
+            const response2 = await axios.get(`http://127.0.0.1:5000/publications?starttime=${filterStartDate2}&endtime=${filterEndDate2}`, {
                 headers: { 'Content-type': 'application/json' }
             });
             console.log({ "data2": await response2.data });
