@@ -34,7 +34,7 @@ const quicksand = Quicksand({
     display: 'swap',
 })
 
-export default function CompareSection () {
+export default function PubCompareSection () {
 
     interface Publication {
         ID: number,
