@@ -66,6 +66,7 @@ export default function Home() {
   const [totalPubs,settotalPubs] = useState<number>(0);
   const [presentedPubs,setpresentedPubs] = useState<number>(0);
   const [publishPubs,setPublishPubs] = useState<number>(0);
+  const [page, setPage] = useState<number>(1)
   const [filterStartDate, setFilterStartDate] = useState<string>('2023-01-01');
   const [filterEndDate,setfilterEndDate] = useState<string>(`${new Date().toISOString().slice(0, -14)}`);
   const [chartData, setChartData] = useState<ChartDataInf>({
@@ -90,7 +91,7 @@ export default function Home() {
     try {
       console.log("start "+filterStartDate);
       console.log("end "+filterEndDate);
-      const response = await axios.get(`http://127.0.0.1:5000/publications?starttime=${filterStartDate}&endtime=${filterEndDate}`,{
+      const response = await axios.get(`http://127.0.0.1:5000/publications?starttime=${filterStartDate}&endtime=${filterEndDate}&page=1`,{
                     headers:{'Content-type':'application/json'}
                 });
                 if(!response.data.status){
@@ -211,7 +212,7 @@ export default function Home() {
             }
         }
         fetchPubs();
-    },[])
+    },[page])
 
   return (
     <main className="bg-[#d5e7eb] h-max w-screen flex justify-end overflow-y-auto">

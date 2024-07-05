@@ -221,7 +221,6 @@ try{
   setSelectedTypes(null)
   setPubEndDate("")
   setPubStartDate("")
-  setScopus("")
   setImpactFactor("")
   setAuthorNames(faculty ? [faculty] : [])
   setPublicationLinks([])
@@ -312,7 +311,7 @@ try{
                                 required
                                 components={animatedComponents}
                                 defaultValue={selectedPubStatus}
-                                onChange={setSelectedPubStatus}
+                                onChange={(newValue) => setSelectedPubStatus(newValue as SingleValue<{ value: string; label: string; }>)} 
                                 placeholder = {
                                     <p className='text-gray-500'>
                                         Publication Status
@@ -432,7 +431,7 @@ try{
                                 required
                                 components={animatedComponents}
                                 defaultValue={indexation}
-                                onChange={setIndexation}
+                                 onChange={(newValue) => setIndexation(newValue as SingleValue<{ value: string; label: string; }>)} 
                                 placeholder = {
                                     <p className='text-gray-500'>
                                         Indexation

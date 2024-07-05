@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"net/http"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -162,18 +161,6 @@ func GetAllPublications(c *gin.Context) {
 	statusFilter := c.Query("status")
 	isCapstoneFilter := c.Query("is_capstone")
 
-	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
-	if err != nil || page < 1 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid page number"})
-		return
-	}
-	pageSize, err := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
-	if err != nil || pageSize < 1 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid pageSize"})
-		return
-	}
-	offset := (page - 1) * pageSize
-
 	startTime, err := time.Parse("2006-01-02", startTimeStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
@@ -245,7 +232,8 @@ func GetAllPublications(c *gin.Context) {
 		defer wg.Done()
 		var publication []models.PublicationinSheet
 
-		err := db.Store.Select(&publication).Where(query, queryParams...).Limit(uint64(pageSize)).Offset(uint64(offset)).Exec(context.Background())
+		err = db.Store.Select(&publication).Where(query, queryParams...).Exec(context.Background())
+
 		//err := db.Store.Select(&publication).Exec(context.Background())
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
