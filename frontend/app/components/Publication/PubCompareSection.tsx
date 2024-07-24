@@ -310,13 +310,13 @@ export default function PubCompareSection () {
                             </thead>
                             <tbody className='divide-y divide-gray-100'>
                                 <tr>
-                                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Time period 1</td>
+                                    <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><span className='font-bold'>{filterStartDate1}</span> to <span className='font-bold'>{filterEndDate1}</span></td>
                                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{conferences1}</td>
                                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{journals1}</td>
                                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{books1}</td>
                                 </tr>
                                 <tr>
-                                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Time period 2</td>
+                                <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><span className='font-bold'>{filterStartDate2}</span> to <span className='font-bold'>{filterEndDate2}</span></td>
                                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{conferences2}</td>
                                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{journals2}</td>
                                     <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{books2}</td>

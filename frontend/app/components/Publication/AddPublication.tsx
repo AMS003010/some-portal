@@ -234,7 +234,7 @@ try{
       <>
        <ToastContainer/>
         <div className="bg-[#d5e7eb] h-max w-screen flex justify-end overflow-x-hidden overflow-y-auto">
-            <div className="h-max bg-white m-3 w-screen md:w-[79%] rounded-2xl p-7 flex flex-col shadow">
+            <div className="h-max bg-white m-3 w-[94%] md:w-[79%] rounded-2xl p-7 flex flex-col shadow">
                 <h1 className={`${roboto.className} text-black text-4xl lg:text-4xl mt-7`}>Add a Publication</h1>
                 <hr className="flex justify-center border-t-2 border-gray-200 mt-7 mb-10"/>
                 <form onSubmit={formSubmit}>
