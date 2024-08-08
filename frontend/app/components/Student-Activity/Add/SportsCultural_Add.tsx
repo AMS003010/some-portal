@@ -1,6 +1,6 @@
 import { Roboto } from 'next/font/google'
 import { MultiValue, SingleValue} from "react-select";
-import "../../styles/addPublicationStyles.css"
+import "../../../styles/addPublicationStyles.css"
 import Creatable from "react-select/creatable"
 import makeAnimated from 'react-select/animated';
 import { TagsInput } from "react-tag-input-component";
@@ -14,9 +14,6 @@ const roboto = Roboto({
     subsets: ['latin'],
     display: 'swap',
 })
-
-
-
 
 type PublicationJSON = {
   FacultyName: string,
@@ -34,7 +31,7 @@ type PublicationJSON = {
   ScopusIndexation: string
 }
 
-export default function AddPublication () {
+export default function AddSportsCultural () {
     const [faculty, setFaculty] = useState("")
     const [title, setTitle] = useState("")
     const [confName, setConfName] = useState("")
@@ -233,9 +230,9 @@ try{
     return(
       <>
        <ToastContainer/>
-        <div className="bg-[#d5e7eb] h-max w-screen flex justify-end overflow-x-hidden overflow-y-auto">
-            <div className="h-max bg-white m-3 w-[94%] md:w-[79%] rounded-2xl p-7 flex flex-col shadow">
-                <h1 className={`${roboto.className} text-black text-4xl lg:text-4xl mt-7`}>Add a Publication</h1>
+        <div className="bg-[#d5e7eb]">
+            <div className="bg-white flex flex-col">
+                <h1 className={`${roboto.className} text-black text-3xl lg:text-3xl mt-7`}>Sports & Cultural</h1>
                 <hr className="flex justify-center border-t-2 border-gray-200 mt-7 mb-10"/>
                 <form onSubmit={formSubmit}>
                     <div className='flex justify-between gap-5 mb-7'>
