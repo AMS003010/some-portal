@@ -34,7 +34,7 @@ const quicksand = Quicksand({
     display: 'swap',
 })
 
-export default function PubCompareSection () {
+export default function AwardsAnalyze () {
 
     interface Publication {
         ID: number,
@@ -185,9 +185,9 @@ export default function PubCompareSection () {
     }       
 
     return(
-        <div className="bg-[#d5e7eb] h-max w-screen flex justify-end overflow-y-auto">
-            <div className="h-max bg-white m-3 w-[94%] md:w-[79%] rounded-2xl p-7 flex flex-col shadow">
-                <h1 className={`${roboto.className} text-black text-3xl md:text-4xl lg:text-4xl mt-16 md:mt-7`}>Compare Dashboard</h1>
+        <div className="bg-[#d5e7eb]">
+            <div className="bg-white flex flex-col">
+                <h1 className={`${roboto.className} text-black text-3xl md:text-3xl lg:text-3xl mt-16 md:mt-7`}>Compare Awards</h1>
                 <hr className="flex justify-center border-t-2 border-gray-200 mt-7 mb-10"/>
                 <div className='bg-gray-50 shadow-lg rounded-2xl w-[100%] p-3 md:p-8'>
                     <div className={`${roboto.className} text-black text-2xl`}>

@@ -1,8 +1,9 @@
 "use client"
 
 import Image from 'next/image';
-import PubDropDown from './Publication/PubDropDown';
-import FdpDropDown from './FDP/FdpDropDown';
+import ResearchDropDown from './Research/ResearchDropDown'
+import DepartmentActivityDropDown from './Department-Activity/DA_DropDown';
+import StudentActivityDropDown from './Student-Activity/SA_DropDown';
 
 import PesLogo from '../images/PES-logo-white.png';
 import { Nunito } from 'next/font/google'
@@ -47,10 +48,13 @@ export default function SidePanel({index,setIndex}: SidePanelProps) {
                     <hr className=' flex justify-center border-t-2 border-[#FFF] mt-4'/>
                     <div className='flex flex-col justify-start mt-10'>
                         <div>
-                            <PubDropDown index={index} setIndex={setIndex}/>
+                            <ResearchDropDown index={index} setIndex={setIndex}/>
                         </div>
                         <div>
-                            <FdpDropDown index={index} setIndex={setIndex}/>
+                            <DepartmentActivityDropDown index={index} setIndex={setIndex}/>
+                        </div>
+                        <div>
+                            <StudentActivityDropDown index={index} setIndex={setIndex}/>
                         </div>
                         <div className='flex justify-start items-center my-1 hover:bg-[#21205e] rounded-lg py-4 text-[#FFF] hover:text-white pl-3 cursor-pointer absolute bottom-2 w-[94%]'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-7 h-7">
