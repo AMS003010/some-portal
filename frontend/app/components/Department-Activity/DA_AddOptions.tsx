@@ -1,6 +1,10 @@
 import DaHome from './DA_Home';
-import AddAttended from './Add/Attended_Add';
-import AddConducted from './Add/Conducted_Add';
+import AddWorshop from './Add/Workshop_Add';
+import AddSeminar from './Add/Seminar_Add';
+import AddFdp from './Add/FDP_Add';
+import AddHackathons from './Add/Hackathons_Add';
+import AddSpecialTopic from './Add/SpecialTopic_Add';
+import AddOther from './Add/Other_Add';
 
 import { Roboto } from 'next/font/google';
 import { useState } from 'react';
@@ -17,8 +21,12 @@ export default function DaAddOption () {
 
     const ResearchList = [
         <DaHome key="0" rIndex={rIndex} setRIndex={setRIndex}/>,
-        <AddConducted key="1"/>,
-        <AddAttended key="2"/>
+        <AddWorshop key="1"/>,
+        <AddSeminar key="2"/>,
+        <AddFdp key="3"/>,
+        <AddHackathons key="4"/>,
+        <AddSpecialTopic key="5"/>,
+        <AddOther key="6"/>
     ]
 
     return(

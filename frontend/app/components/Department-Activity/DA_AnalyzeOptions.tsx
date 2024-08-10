@@ -1,6 +1,10 @@
 import DaHome from './DA_Home';
-import AttendedAnalyze from './Analyze/Attended_Analyze';
-import ConductedAnalyze from './Analyze/Conducted_Analyze';
+import WorkshopAnalyze from './Analyze/Workshop_Analyze';
+import SeminarAnalyze from './Analyze/Seminar_Analyze';
+import FdpAnalyze from './Analyze/FDP_Analyze';
+import HackathonsAnalyze from './Analyze/Hackathons_Analyze';
+import SpecialTopicAnalyze from './Analyze/SpecialTopic_Analyze';
+import OtherAnalyze from './Analyze/Other_Analyze';
 
 import { Roboto } from 'next/font/google';
 import { useState } from 'react';
@@ -17,8 +21,12 @@ export default function DaAnalyzeOption () {
 
     const ResearchList = [
         <DaHome key="0" rIndex={rIndex} setRIndex={setRIndex}/>,
-        <ConductedAnalyze key="1"/>,
-        <AttendedAnalyze key="2"/>
+        <WorkshopAnalyze key="1"/>,
+        <SeminarAnalyze key="2"/>,
+        <FdpAnalyze key="3"/>,
+        <HackathonsAnalyze key="4"/>,
+        <SpecialTopicAnalyze key="5"/>,
+        <OtherAnalyze key="6"/>,
     ]
 
     return(
